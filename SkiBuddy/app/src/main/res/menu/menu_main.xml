@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+        app:showAsAction="always|ifRoom" />
+
+    <item android:id="@+id/action_signout" android:title="Signout"
+        app:showAsAction="always|ifRoom"/>
+
+    <item android:id="@+id/action_signoutanddisconnect" android:title="Signout and Disconnect"
+         app:showAsAction="always|ifRoom"/>
+</menu>
