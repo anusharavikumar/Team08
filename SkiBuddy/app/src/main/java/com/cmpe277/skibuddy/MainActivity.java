@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -64,6 +65,7 @@ public class MainActivity extends FragmentActivity implements
     private ImageView profilepic;
     private TextView name;
     private TextView email;
+    private Button skiDetails;
 
     private LoginButton loginButton;
     private CallbackManager callbackManager;
@@ -123,10 +125,17 @@ public class MainActivity extends FragmentActivity implements
         profilepic = (ImageView) findViewById(R.id.profilepic);
         name = (TextView) findViewById(R.id.nameid);
         email = (TextView) findViewById(R.id.emailid);
+        skiDetails = (Button) findViewById(R.id.skiSession);
+        skiDetails.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                viewSkiDetails();
+            }
+        });
 
         profilepic.setVisibility(View.GONE);
         name.setVisibility(View.GONE);
         email.setVisibility(View.GONE);
+        skiDetails.setVisibility(View.GONE);
 
         //FACEBOOK
         callbackManager = CallbackManager.Factory.create();
@@ -393,6 +402,7 @@ public class MainActivity extends FragmentActivity implements
                 findViewById(R.id.login_button).setVisibility(View.GONE);
                 name.setVisibility(View.VISIBLE);
                 email.setVisibility(View.VISIBLE);
+                skiDetails.setVisibility(View.VISIBLE);
                 findViewById(R.id.sign_in_button).setVisibility(View.GONE);
                 String url = "https://www.googleapis.com/plus/v1/people/" + acct.getId() + "?fields=image&key=AIzaSyCkDrLVCePMsRyRg6JlNo1tBVX6wqygB8s";
                 googleuserid = acct.getId();
@@ -425,6 +435,16 @@ public class MainActivity extends FragmentActivity implements
             LinearLayout linearLayout = (LinearLayout) findViewById(R.id.homeImage);
             linearLayout.setBackground(getResources().getDrawable(R.drawable.androidwallpaper, null));
         }
+    }
+
+    private void viewSkiDetails()
+    {
+        //Intent myIntent = new Intent(MainActivity.this, SkiDetailListActivity.class);
+        //myIntent.putExtra("key", value); //Optional parameters
+        //MainActivity.this.startActivity(myIntent);
+        Intent intent = new Intent(this, SkiDetailListActivity.class);
+        Toast.makeText(this, "Button Clicked ", Toast.LENGTH_SHORT).show();
+        startActivity(intent);
     }
 
     @Override

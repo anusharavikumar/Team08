@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@drawable/backgd"
+    >
+    <ImageView android:src="@drawable/view"
+        android:layout_height="0dp"
+        android:layout_width="fill_parent"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:id="@+id/pic">
+    </ImageView>
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.91">
+        <TableLayout
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:stretchColumns="1"
+            android:padding="10dp"
+            android:background="@drawable/border">
+            <TableRow>
+                <TextView android:id="@+id/info"
+                    android:layout_span="2"
+                    android:text="Ski Event Record details"
+                    android:textSize="20dp"
+                    android:textColor="@color/com_facebook_button_background_color"
+                    android:padding="3dip"
+                    android:layout_gravity="center_horizontal" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Distance"
+                    android:textSize="15dp"
+                    android:textColor="@color/material_blue_grey_800"
+                    android:id="@+id/textView"
+                    android:layout_column="0"
+                    android:layout_weight="2"
+                  />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="3 miles"
+                    android:textSize="15dp"
+                    android:id="@+id/textView3"
+                    android:layout_weight="1" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Session duration"
+                    android:textSize="15dp"
+                    android:textColor="@color/material_blue_grey_800"
+                    android:id="@+id/textView4"
+                    android:layout_weight="2"
+                    android:layout_column="0"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="20mins"
+                    android:textSize="15dp"
+                    android:id="@+id/textView5"
+                    android:layout_weight="1" />
+
+            </TableRow>
+
+
+        </TableLayout>
+
+    </ScrollView>
+</LinearLayout>

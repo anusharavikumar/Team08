@@ -55,4 +55,14 @@
         android:layout_below="@+id/nameid"
         android:layout_alignParentStart="true" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Ski Sessions"
+        android:id="@+id/skiSession"
+        android:layout_weight="0"
+        android:layout_below="@+id/emailid"
+        android:layout_alignParentStart="true" />
+
+
 </LinearLayout>
