@@ -14,8 +14,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.facebook.appevents.AppEventsLogger;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -39,6 +50,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 
 public class MainActivity extends FragmentActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -53,21 +65,45 @@ public class MainActivity extends FragmentActivity implements
     private TextView name;
     private TextView email;
 
-    //private LoginButton loginButton;
-    //private CallbackManager callbackManager;
-    //private Boolean isFacebook = false;
+    private LoginButton loginButton;
+    private CallbackManager callbackManager;
+    private static Boolean isFacebook = false;
+
+    private static String googlename;
+    private static String googleemail;
+    private static String facebookname;
+    private static String facebookemail;
+    private static String googleuserid;
+    private static String facebookuserid;
+
+    public static String getUserEmail(){
+        if(isFacebook){
+            return facebookemail;
+        }else{
+            return googleemail;
+        }
+    }
+    public static String getUserAcctId(){
+        if(isFacebook){
+            return facebookuserid;
+        }else{
+            return googleuserid;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //FacebookSdk.sdkInitialize(getApplicationContext());
+        //FACEBOOK
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
         setContentView(R.layout.activity_main);
 
-
         findViewById(R.id.sign_in_button).setOnClickListener(this);
-
         findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
         //this.getActionBar().show();
+
+        //GOOGLE
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestScopes(new Scope(Scopes.PLUS_LOGIN))
                 .requestEmail()
@@ -83,6 +119,7 @@ public class MainActivity extends FragmentActivity implements
                 .addApi(Plus.API, Plus.PlusOptions.builder().build())
                 .addScope(Plus.SCOPE_PLUS_PROFILE)
                 .build();
+
         profilepic = (ImageView) findViewById(R.id.profilepic);
         name = (TextView) findViewById(R.id.nameid);
         email = (TextView) findViewById(R.id.emailid);
@@ -91,46 +128,80 @@ public class MainActivity extends FragmentActivity implements
         name.setVisibility(View.GONE);
         email.setVisibility(View.GONE);
 
-
-        /*callbackManager = CallbackManager.Factory.create();
+        //FACEBOOK
+        callbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton)findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email", "public_profile", "user_likes", "user_friends");
-        FacebookSdk.addLoggingBehavior(LoggingBehavior.REQUESTS);
-        new GraphRequest(
-                AccessToken.getCurrentAccessToken(),
-                "/me",
-                null,
-                HttpMethod.GET,
-                new GraphRequest.Callback() {
-                    public void onCompleted(GraphResponse response) {
-
-                    }
-                }
-        ).executeAsync();
-
+        loginButton.setReadPermissions(Arrays.asList("user_likes", "user_status", "email", "public_profile"));
         loginButton.registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         isFacebook = true;
                         String FacebookUserID = loginResult.getAccessToken().getUserId();
-                        String FacebookAuthToken = loginResult.getAccessToken().getToken();
-                        System.out.println("inside");
-
-                        GraphRequest.newMeRequest(
-                                loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                                    @Override
-                                    public void onCompleted(JSONObject me, GraphResponse response) {
-                                        System.out.println("inside");
-                                        // Application code
+                        facebookuserid = FacebookUserID;
+                        new LoadProfileImage2(profilepic, FacebookUserID).execute();
+                        //String FacebookAuthToken = loginResult.getAccessToken().getToken();
+                        //System.out.println("inside");
+                        /* make the API call */
+                        new GraphRequest(
+                                AccessToken.getCurrentAccessToken(),
+                                "/me",
+                                null,
+                                HttpMethod.GET,
+                                new GraphRequest.Callback() {
+                                    public void onCompleted(GraphResponse response) {
+                                    /* handle the result */
                                         Log.v("LoginActivity", response.toString());
-                                        System.out.println("Check: " + response.toString());
-                                        facebookdetails(me);
+                                        try{
+                                            response.getJSONObject().getString("name");
+                                            facebookname= response.getJSONObject().getString("name");
+                                            System.out.println("name=" + facebookname);
+                                            name.setText(facebookname);
+                                            name.setVisibility(View.VISIBLE);
+                                        }catch (JSONException j){
 
+                                        }
+                                    }
+                                }
+                        ).executeAsync();
+
+                        /*new GraphRequest(
+                                AccessToken.getCurrentAccessToken(),
+                                "/"+loginResult.getAccessToken(),
+                                null,
+                                HttpMethod.GET,
+                                new GraphRequest.Callback() {
+                                    public void onCompleted(GraphResponse response) {
+                                    handle the result
+                                        System.out.println(response.toString());
+                                        Log.v("LoginActivity", response.toString());
 
                                     }
-                                });
-                        updateUI(true);
+
+                                }).executeAsync();
+                        */
+
+                        GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
+                                new GraphRequest.GraphJSONObjectCallback() {
+
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                Log.i("LoginActivityfinal", response.toString());
+                                // Get facebook data from login
+                                Bundle bFacebookData = getFacebookData(object);
+                                System.out.println("emailfrombundle" + bFacebookData.getString("email"));
+                                facebookemail = bFacebookData.getString("email");
+                                email.setText(facebookemail);
+                                email.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    );
+                    Bundle parameters = new Bundle();
+                    parameters.putString("fields", "id, first_name, last_name, email, gender"); // Parámetros que pedimos a facebook
+                    request.setParameters(parameters);
+                    request.executeAsync();
+
+                    updateUI(true);
                     }
 
                     @Override
@@ -144,12 +215,38 @@ public class MainActivity extends FragmentActivity implements
                     }
                 });
 
-        //loginButton.
-        */
     }
-    /*
-    public static Bitmap getFacebookProfilePicture(String userID) throws IOException {
+
+    private Bundle getFacebookData(JSONObject object) {
+        String id;
+        Bundle bundle = null;
+        try {
+            bundle = new Bundle();
+            id = object.getString("id");
+
+            bundle.putString("idFacebook", id);
+
+            if (object.has("first_name"))
+                bundle.putString("first_name", object.getString("first_name"));
+            if (object.has("last_name"))
+                bundle.putString("last_name", object.getString("last_name"));
+            if (object.has("email"))
+                bundle.putString("email", object.getString("email"));
+            if (object.has("gender"))
+                bundle.putString("gender", object.getString("gender"));
+
+            return bundle;
+
+        } catch (JSONException e){
+
+        }
+        return bundle;
+    }
+
+
+    /*public static Bitmap getFacebookProfilePicture(String userID) throws IOException {
         URL imageURL = new URL("https://graph.facebook.com/" + userID + "/picture?type=large");
+        /////http://graph.facebook.com/"+10154290507339045+"/picture?type=large
         System.out.println("FACEBOOK"+imageURL);
         Bitmap bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
 
@@ -186,7 +283,7 @@ public class MainActivity extends FragmentActivity implements
             e.printStackTrace();
         }
     }
-*/
+ */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -236,7 +333,9 @@ public class MainActivity extends FragmentActivity implements
             result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
-        //callbackManager.onActivityResult(requestCode, resultCode, data);
+        //if(isFacebook) {
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+        //}
     }
     // [END onActivityResult]
 
@@ -246,7 +345,6 @@ public class MainActivity extends FragmentActivity implements
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             acct = result.getSignInAccount();
-
             updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
@@ -291,40 +389,36 @@ public class MainActivity extends FragmentActivity implements
     // [END revokeAccess]
     private void updateUI(boolean signedIn) {
         if (signedIn) {
-        //if(!isFacebook) {
-            name.setVisibility(View.VISIBLE);
-            email.setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-            String url = "https://www.googleapis.com/plus/v1/people/" + acct.getId() + "?fields=image&key=AIzaSyCkDrLVCePMsRyRg6JlNo1tBVX6wqygB8s";
-            System.out.println("profile url" + acct.getPhotoUrl());
-            System.out.println("User ID" + acct.getId());
-            name.setText("Welcome: \n" + acct.getDisplayName());
-            email.setText("Signed In as: \n" + acct.getEmail());
-            name.setTextSize(18);
-            email.setTextSize(18);
-
-            //Bitmap b = getImageBitmap(url);
-            //profilepic.setImageBitmap(b);
-            new LoadProfileImage(profilepic, url).execute();
-            System.out.println(url);
-            //name.setEnabled(false);
-            //email.setEnabled(false);
-            profilepic.setVisibility(View.VISIBLE);
-            LinearLayout linearLayout = (LinearLayout) findViewById(R.id.homeImage);
-            linearLayout.setBackgroundColor(Color.TRANSPARENT);
-        /*}else{
-
-            name.setVisibility(View.VISIBLE);
-            email.setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-            profilepic.setVisibility(View.VISIBLE);
-            LinearLayout linearLayout = (LinearLayout) findViewById(R.id.homeImage);
-            linearLayout.setBackgroundColor(Color.TRANSPARENT);
-        }*/
-
-
+            if(!isFacebook) {
+                findViewById(R.id.login_button).setVisibility(View.GONE);
+                name.setVisibility(View.VISIBLE);
+                email.setVisibility(View.VISIBLE);
+                findViewById(R.id.sign_in_button).setVisibility(View.GONE);
+                String url = "https://www.googleapis.com/plus/v1/people/" + acct.getId() + "?fields=image&key=AIzaSyCkDrLVCePMsRyRg6JlNo1tBVX6wqygB8s";
+                googleuserid = acct.getId();
+                googleemail = acct.getEmail();
+                googlename = acct.getDisplayName();
+                name.setText("Welcome: \n" + acct.getDisplayName());
+                email.setText("Signed In as: \n" + acct.getEmail());
+                name.setTextSize(18);
+                email.setTextSize(18);
+                new LoadProfileImage(profilepic, url).execute();
+                System.out.println(url);
+                profilepic.setVisibility(View.VISIBLE);
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.homeImage);
+                linearLayout.setBackgroundColor(Color.TRANSPARENT);
+                Toast.makeText(this, "Logged in via Google: Welcome "+ googlename +", "+ googleemail, Toast.LENGTH_SHORT).show();
+            }else{
+                findViewById(R.id.sign_in_button).setVisibility(View.GONE);
+                findViewById(R.id.login_button).setVisibility(View.GONE);
+                profilepic.setVisibility(View.VISIBLE);
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.homeImage);
+                linearLayout.setBackgroundColor(Color.TRANSPARENT);
+                Toast.makeText(this, "Logged in via Facebook: Welcome " + facebookname + ", " + facebookemail, Toast.LENGTH_SHORT).show();
+            }
         } else {
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.login_button).setVisibility(View.VISIBLE);
             profilepic.setVisibility(View.GONE);
             name.setVisibility(View.GONE);
             email.setVisibility(View.GONE);
@@ -352,92 +446,62 @@ public class MainActivity extends FragmentActivity implements
             return true;
         }
         if (id == R.id.action_signout) {
-            /*if (isFacebook){
+            if (isFacebook){
+                isFacebook= false;
                 LoginManager.getInstance().logOut();
+                updateUI(false);
             }
-            else {*/
+            else {
                 signOut();
-           // }
+           }
             return true;
         }
         if(id == R.id.action_signoutanddisconnect){
-            /*if (isFacebook){
+            if (isFacebook){
+                isFacebook= false;
                 LoginManager.getInstance().logOut();
-            }else {*/
+                updateUI(false);
+            }else {
                 revokeAccess();
-            //}
+            }
             return true;
         }
-
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Logs 'install' and 'app activate' App Events.
-        AppEventsLogger.activateApp(this);
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        // Logs 'app deactivate' App Event.
-        AppEventsLogger.deactivateApp(this);
     }
 }
 
 class LoadProfileImage extends AsyncTask<String, Void, Bitmap> {
-    ImageView bmImage;
+    ImageView profileimage;
     String inputurl;
     String url2;
-    public LoadProfileImage(ImageView bmImage, String url) {
-        this.bmImage = bmImage;
+    public LoadProfileImage(ImageView profileimage, String url) {
+        this.profileimage = profileimage;
         this.inputurl = url;
     }
 
     protected Bitmap doInBackground(String... urls) {
-
         StringBuilder serverSB = new StringBuilder();
-
         HttpURLConnection urlConnection = null;
-
-        StringBuilder sb = new StringBuilder();
+       // StringBuilder sb = new StringBuilder();
         try {
-
             URL url = new URL(inputurl);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.setUseCaches(false);
             urlConnection.setConnectTimeout(10000);
             urlConnection.connect();
-
-            String responseMessage=urlConnection.getResponseMessage();
-            int HttpResult =urlConnection.getResponseCode();
-            System.out.println("CODE: "+HttpResult);
-            int len= urlConnection.getContentLength();
-
-            //TODO: check for created or check for validated. If not throw pop up as error.
-            System.out.println(responseMessage);
-
-            //TODO: this should be different status code
+            //String responseMessage=urlConnection.getResponseMessage();
+            //int HttpResult =urlConnection.getResponseCode();
+            //System.out.println("CODE: "+HttpResult);
+            //int len= urlConnection.getContentLength();
+            //System.out.println(responseMessage);
             if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_OK ) {
-
-                Log.i("Google Profile Pic", "---Failed : HTTP error code : "
-                        + urlConnection.getResponseCode());
+                Log.i("Google Profile Pic", "---Failed : HTTP error code : " + urlConnection.getResponseCode());
             }
             else {
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(
-                        (urlConnection.getInputStream())));
-
+                BufferedReader br = new BufferedReader(new InputStreamReader((urlConnection.getInputStream())));
                 String serverOutput;
-
                 System.out.println("Output from GET .... \n");
-
                 //To ensure the body is not zero
                 int count = 0;
                 while ((serverOutput = br.readLine()) != null) {
@@ -445,17 +509,13 @@ class LoadProfileImage extends AsyncTask<String, Void, Bitmap> {
                     System.out.println(serverOutput);
                     //serverSB.append(serverOutput + "\n");
                     serverSB.append(serverOutput);
-
                 }
-
                 JSONObject jsonObject = null;
-
                 try {
                     jsonObject = new JSONObject(serverSB.toString());
                     JSONObject queryArray = jsonObject.getJSONObject("image");
                     url2 = queryArray.get("url").toString();
                     System.out.println( queryArray.get("url"));
-
                 }catch(JSONException e)
                 {
                     e.printStackTrace();
@@ -464,38 +524,62 @@ class LoadProfileImage extends AsyncTask<String, Void, Bitmap> {
             }
         }
         catch (MalformedURLException e) {
-
             e.printStackTrace();
         } catch (IOException e) {
-
-        e.printStackTrace();
-            }
+            e.printStackTrace();
+        }
         finally {
             if (urlConnection != null)
             urlConnection.disconnect();
         }
 
-
         String urldisplay = url2;
-        Bitmap mIcon11 = null;
+        Bitmap b = null;
         try {
             InputStream in = new java.net.URL(urldisplay).openStream();
-            mIcon11 = BitmapFactory.decodeStream(in);
+            b = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
             Log.e("Error", e.getMessage());
             e.printStackTrace();
         }
-        return mIcon11;
+        return b;
     }
 
     protected void onPostExecute(Bitmap result) {
-        bmImage.setImageBitmap(result);
+        profileimage.setImageBitmap(result);
     }
 }
 
+class LoadProfileImage2 extends AsyncTask<String, Void, Bitmap> {
+    ImageView profileimage;
+    String inputId;
+    String url2;
+    URL imageURL;
+    Bitmap bitmap;
+    public LoadProfileImage2(ImageView profileimage, String inputId) {
+        this.profileimage = profileimage;
+        this.inputId = inputId;
+    }
 
+    protected Bitmap doInBackground(String... urls) {
 
+        try{
+            imageURL = new URL("https://graph.facebook.com/" + inputId + "/picture?type=large");
+        }catch (MalformedURLException e)
+        {
 
+        }
+        //http://graph.facebook.com/"+10154290507339045+"/picture?type=large
+        System.out.println("FACEBOOK"+imageURL);
+        try{
+            bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+        }catch (IOException e){
 
+        }
+        return bitmap;
+    }
 
-
+    protected void onPostExecute(Bitmap result) {
+        profileimage.setImageBitmap(result);
+    }
+}
