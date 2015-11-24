@@ -5,13 +5,35 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.cmpe277.skibuddy.helpers.ServicesHelper;
+
+import java.util.ArrayList;
 
 public class SkiDetailActivity extends FragmentActivity {
 
+    private TextView skiDistance;
+    private TextView skiTime;
+    private TextView detailTitle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ski_detail);
+
+        skiDistance = (TextView) findViewById(R.id.skiDistance);
+        skiTime = (TextView) findViewById(R.id.skiTime);
+        detailTitle = (TextView) findViewById(R.id.detailTitle);
+        populateDetails();
+    }
+
+    void populateDetails()
+    {
+        //TODO: Make service call and get details for the particular SKI record. Also draw map. Displaying image for now
+        Record record = ServicesHelper.shared().getSkiRecordDetailForUser("recordId");
+        skiDistance.setText(record.distance);
+        skiTime.setText(record.time);
     }
 
     @Override

@@ -24,7 +24,7 @@
             android:padding="10dp"
             android:background="@drawable/border">
             <TableRow>
-                <TextView android:id="@+id/info"
+                <TextView android:id="@+id/detailTitle"
                     android:layout_span="2"
                     android:text="Ski Event Record details"
                     android:textSize="20dp"
@@ -64,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:text="3 miles"
                     android:textSize="15dp"
-                    android:id="@+id/textView3"
+                    android:id="@+id/skiDistance"
                     android:layout_weight="1" />
 
             </TableRow>
@@ -97,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:text="20mins"
                     android:textSize="15dp"
-                    android:id="@+id/textView5"
+                    android:id="@+id/skiTime"
                     android:layout_weight="1" />
 
             </TableRow>

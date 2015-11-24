@@ -9,21 +9,31 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+import com.cmpe277.skibuddy.adapters.CustomRecordsAdapter;
+import com.cmpe277.skibuddy.helpers.ServicesHelper;
 
 import java.util.ArrayList;
 
 public class SkiDetailListActivity extends FragmentActivity {
 
+    String userId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ski_detaillist);
+        Bundle extras = getIntent().getExtras();
+        if(extras == null) {
+            userId= null;
+        } else {
+            userId= extras.getString("userID");
+        }
         populateUsersList();
     }
 
     private void populateUsersList() {
         // Construct the data source
-        ArrayList<Record> arrayOfRecords = Record.getRecords();
+        ArrayList<Record> arrayOfRecords = ServicesHelper.shared().getAllSkiRecordsForUser(userId);
         // Create the adapter to convert the array to views
         CustomRecordsAdapter adapter = new CustomRecordsAdapter(this, arrayOfRecords);
         // Attach the adapter to a ListView

@@ -450,6 +450,7 @@ public class MainActivity extends FragmentActivity implements
         //myIntent.putExtra("key", value); //Optional parameters
         //MainActivity.this.startActivity(myIntent);
         Intent intent = new Intent(this, SkiDetailListActivity.class);
+        intent.putExtra("userID",getUserAcctId());
         Toast.makeText(this, "Button Clicked ", Toast.LENGTH_SHORT).show();
         startActivity(intent);
     }
