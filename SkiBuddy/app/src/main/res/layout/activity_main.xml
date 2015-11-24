@@ -64,5 +64,12 @@
         android:layout_below="@+id/emailid"
         android:layout_alignParentStart="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lets go skiing"
+        android:id="@+id/buttonMap"
+        android:onClick="startMapView" />
+
 
 </LinearLayout>

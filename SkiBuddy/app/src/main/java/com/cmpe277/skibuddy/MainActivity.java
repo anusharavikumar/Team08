@@ -226,6 +226,13 @@ public class MainActivity extends FragmentActivity implements
 
     }
 
+    public void startMapView(View view) {
+        Log.d("Hello", "Hello");
+        Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
+
+    }
+
     private Bundle getFacebookData(JSONObject object) {
         String id;
         Bundle bundle = null;
