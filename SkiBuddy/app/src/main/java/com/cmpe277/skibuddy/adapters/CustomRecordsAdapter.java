@@ -1,4 +1,4 @@
-package com.cmpe277.skibuddy;
+package com.cmpe277.skibuddy.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.ListView;
+
+import com.cmpe277.skibuddy.R;
+import com.cmpe277.skibuddy.Record;
 
 import java.util.ArrayList;
 

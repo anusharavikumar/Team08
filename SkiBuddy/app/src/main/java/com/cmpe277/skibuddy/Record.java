@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public class Record {
 	public String record;
 	public String event;
+	public String distance;
+	public String time;
 
 	public Record(String record, String event) {
 		this.record = record;

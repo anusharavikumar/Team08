@@ -40,10 +40,10 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".SignedInUi" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.cmpe277.skibuddy.MainActivity" />
+                android:value="com.cmpe277.skibuddy.SignedInUi" />
         </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -53,10 +53,10 @@
         <activity
             android:name=".SkiDetailListActivity"
             android:label="@string/title_activity_ski_details"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".SignedInUi" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.cmpe277.skibuddy.MainActivity" />
+                android:value="com.cmpe277.skibuddy.SignedInUi" />
         </activity>
         <activity
             android:name=".SkiDetailActivity"
@@ -66,6 +66,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.cmpe277.skibuddy.SkiDetailListActivity" />
         </activity>
+        <activity
+            android:name=".SignedInUi"
+            android:label="@string/app_name"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.cmpe277.skibuddy.MainActivity" />
+        </activity>
+
     </application>
 
 </manifest>
