@@ -1,8 +1,8 @@
 package com.cmpe277.skibuddy;
 
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
@@ -13,9 +13,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 public class MapsActivity extends FragmentActivity {
 
@@ -23,7 +28,19 @@ public class MapsActivity extends FragmentActivity {
     private PolylineOptions skiPath;
     List<LatLng> pointList=new ArrayList<LatLng>();
     String flag="";
+    private Handler handler = new Handler();
+    private LatLng currentLocation;
+    private boolean locationSet=false;
 
+    public void setCurrentLocation(LatLng location)
+    {
+        locationSet=true;
+        currentLocation=location;
+    }
+    public String getCurrentLocation()
+    {
+        return currentLocation.toString();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +48,9 @@ public class MapsActivity extends FragmentActivity {
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
 
+        //Uncomment this when integrated with server
+        //updateServerWithCurrentLocation.run();
+        //getOtherUsersLocation.run();
 
     }
 
@@ -117,6 +137,9 @@ public class MapsActivity extends FragmentActivity {
         @Override
         public void onMyLocationChange(Location location) {
             LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+            setCurrentLocation(loc);
+
+            Log.d("Current Loc string",getCurrentLocation());
 
             if(flag.equals("start"))
             {
@@ -147,6 +170,66 @@ public class MapsActivity extends FragmentActivity {
 
 
             //mMap.addPolyline(skiPath.add(loc))
+
+        }
+    };
+
+    private Runnable updateServerWithCurrentLocation = new Runnable()
+    {
+        public void run()
+        {
+            if(locationSet)
+            {
+                //Inform server about current location
+                AsyncHttpClient client = new AsyncHttpClient();
+                RequestParams params = new RequestParams();
+                params.put("CurrentLocation", getCurrentLocation());
+
+                client.get("http://localhost:8080",params ,new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        // status has to be 200
+                        Log.d("Response", ""+responseBody);
+
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        Log.d("Failed", "On failuer called");
+                    }
+
+                });
+            }
+            Log.d("Thread", "Excecuted");
+            handler.postDelayed(this, 20000); // Thread running after 20 sec
+        }
+    };
+
+    private Runnable getOtherUsersLocation = new Runnable()
+    {
+        public void run()
+        {
+
+            AsyncHttpClient client = new AsyncHttpClient();
+            RequestParams params = new RequestParams();
+            params.put("CurrentLocation", getCurrentLocation());
+
+            client.get("http://localhost:8080",params ,new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    // status has to be 200
+                    Log.d("Response", ""+responseBody);
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Log.d("Failed", "On failuer called");
+                }
+            });
+
+            Log.d("Thread 2", "Excecuted");
+            handler.postDelayed(this, 20000); // Thread running after 20 sec
         }
     };
 
@@ -155,10 +238,6 @@ public class MapsActivity extends FragmentActivity {
         for(LatLng point: pointList){
             skiPath2=skiPath2.add(point);
         }
-       /* skiPath2.add(new LatLng(-33.866, 151.195))  // Sydney
-                .add(new LatLng(-18.142, 178.431))  // Fiji
-                .add(new LatLng(21.291, -157.821))  // Hawaii
-                .add(new LatLng(37.423, -122.091)) ;*/
         mMap.addPolyline(skiPath2);
         Log.d("Polyline","drawn");
     }
