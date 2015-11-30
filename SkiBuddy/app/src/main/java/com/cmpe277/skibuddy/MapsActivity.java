@@ -10,6 +10,7 @@ import android.view.View;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -71,66 +72,21 @@ public class MapsActivity extends FragmentActivity {
 
 
     private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
-            // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
-            // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
             }
         }
     }
 
-
-   /* @Override
-    public void onMapReady(GoogleMap map) {
-        LatLng sydney = new LatLng(-33.867, 151.206);
-
-        map.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
-
-        map.addMarker(new MarkerOptions()
-                .title("Sydney")
-                .snippet("The most populous city in Australia.")
-                .position(sydney));
-    }*/
-
     private void setUpMap() {
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
         skiPath= new PolylineOptions().geodesic(true);
-        //mMap.setMyLocationEnabled(true);
-       /* LatLng sydney = new LatLng(-33.867, 151.206);
-
-        //mMap.setMyLocationEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
-
-        mMap.addMarker(new MarkerOptions()
-                .title("Sydney")
-                .snippet("The most populous city in Australia.")
-                .position(sydney)); */
-
-      /*  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(-18.142, 178.431), 2));
-
-        // Polylines are useful for marking paths and routes on the map.
-        mMap.addPolyline(new PolylineOptions().geodesic(true)
-                .add(new LatLng(-33.866, 151.195))  // Sydney
-                .add(new LatLng(-18.142, 178.431))  // Fiji
-                .add(new LatLng(21.291, -157.821))  // Hawaii
-                .add(new LatLng(37.423, -122.091))  // Mountain View
-
-        ); */
-
-        /*if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
-        } else {
-            // Show rationale and request permission.
-        }*/
         mMap.setMyLocationEnabled(true);
         mMap.setOnMyLocationChangeListener(myLocationChangeListener);
+        addPeopleOnMap(new LatLng(37.560000,-122.044999), "Dhanu");
     }
 
     private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
@@ -156,21 +112,6 @@ public class MapsActivity extends FragmentActivity {
             if(mMap != null){
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
             }
-            //skiPath.add(loc);
-            /*mMap.addPolyline(skiPath.add(new LatLng(-33.866, 151.195))  // Sydney
-                   .add(new LatLng(-18.142, 178.431))  // Fiji
-                    .add(new LatLng(21.291, -157.821))  // Hawaii
-                           .add(new LatLng(37.423, -122.091)) ); // Mountain View */
-
-           /*imp List<LatLng> points= skiPath.getPoints();
-            points.add(loc);
-            //skiPath.setPoints(points);
-
-            mMap.addPolyline(skiPath.add(loc) ); */
-
-
-            //mMap.addPolyline(skiPath.add(loc))
-
         }
     };
 
@@ -192,7 +133,6 @@ public class MapsActivity extends FragmentActivity {
                         Log.d("Response", ""+responseBody);
 
                     }
-
                     @Override
                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                         Log.d("Failed", "On failuer called");
@@ -219,6 +159,7 @@ public class MapsActivity extends FragmentActivity {
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     // status has to be 200
                     Log.d("Response", ""+responseBody);
+                   //Call addPeopleOnMap()
 
                 }
 
@@ -240,6 +181,11 @@ public class MapsActivity extends FragmentActivity {
         }
         mMap.addPolyline(skiPath2);
         Log.d("Polyline","drawn");
+    }
+
+    public void addPeopleOnMap(LatLng latLng, String title){
+        mMap.addMarker(new MarkerOptions().position(latLng).title(title).icon(BitmapDescriptorFactory.fromResource(R.drawable.m2))
+                .anchor(0.0f, 1.0f)); // Anchors the marker on the bottom left);
     }
 
 
