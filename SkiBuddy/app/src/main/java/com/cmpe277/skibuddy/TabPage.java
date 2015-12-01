@@ -19,10 +19,10 @@ public class TabPage extends FragmentStatePagerAdapter {
         Fragment f = null;
         if(i == 0) {
 
-          //  f = new CreateEvent();
+            f = new CreateEvent();
         }
            else if(i ==1){
-          //  f = new ListEvent();
+           f = new ListEvent();
 
         }
         return f;
