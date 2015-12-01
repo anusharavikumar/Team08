@@ -82,6 +82,17 @@
                 <category android:name="android.intent.category.Default" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ListFriends"
+            android:label="@string/app_name" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.ListFriends" />
+                <category android:name="android.intent.category.Default" />
+            </intent-filter>
+
+        </activity>
+
     </application>
 
 </manifest>

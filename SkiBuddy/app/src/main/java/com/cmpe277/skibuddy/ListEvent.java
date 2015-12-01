@@ -128,11 +128,11 @@ class eventDetails extends ArrayAdapter<String> {
     }
     public void myClickHandler(String eventId) {
 
-/*
+
         Intent intent = new Intent(getContext(), ListFriends.class);
         intent.putExtra("Event_ID", eventId);
         getContext().startActivity(intent);
-*/
+
         }
 
     }
