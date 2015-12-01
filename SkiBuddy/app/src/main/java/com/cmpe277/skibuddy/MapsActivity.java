@@ -17,8 +17,11 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.google.gson.Gson;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -27,20 +30,23 @@ public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private PolylineOptions skiPath;
-    List<LatLng> pointList=new ArrayList<LatLng>();
+    List<LatLng> pointList;
     String flag="";
     private Handler handler = new Handler();
     private LatLng currentLocation;
     private boolean locationSet=false;
+    private SessionDetails session;
+    Calendar cal ;
+    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
     public void setCurrentLocation(LatLng location)
     {
         locationSet=true;
         currentLocation=location;
     }
-    public String getCurrentLocation()
+    public LatLng getCurrentLocation()
     {
-        return currentLocation.toString();
+        return currentLocation;
     }
 
     @Override
@@ -57,11 +63,35 @@ public class MapsActivity extends FragmentActivity {
 
     public void onStart(View view)
     {
-        flag="start";
+        if(!flag.equals("start")) {
+            flag = "start";
+            pointList = new ArrayList<LatLng>();
+            session = new SessionDetails();
+            cal=Calendar.getInstance();
+            session.Session_start = sdf.format(cal.getTime());
+        }
     }
     public void onStop(View view)
     {
-        flag="stop";
+        if(!flag.equals("stop")) {
+            flag = "stop";
+            cal = Calendar.getInstance();
+            session.Session_end = sdf.format(cal.getTime());
+            session.Session_Data = pointList;
+            session.distance=distCovered(pointList.get(0).latitude, pointList.get(0).longitude, pointList.get(pointList.size() - 1).latitude, pointList.get(pointList.size() - 1).longitude);
+            sendInformationToServer(session);
+
+        }
+    }
+
+    public void sendInformationToServer(SessionDetails s)
+    {
+        Gson gson = new Gson();
+        String json = gson.toJson(s);
+
+        // Implement code to send it to server
+        System.out.println("Info sent to server: "+ json);
+
     }
 
     @Override
@@ -86,7 +116,7 @@ public class MapsActivity extends FragmentActivity {
         skiPath= new PolylineOptions().geodesic(true);
         mMap.setMyLocationEnabled(true);
         mMap.setOnMyLocationChangeListener(myLocationChangeListener);
-        addPeopleOnMap(new LatLng(37.560000,-122.044999), "Dhanu");
+        //addPeopleOnMap(new LatLng(37.560000,-122.044999), "Dhanu");
     }
 
     private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
@@ -95,7 +125,7 @@ public class MapsActivity extends FragmentActivity {
             LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
             setCurrentLocation(loc);
 
-            Log.d("Current Loc string",getCurrentLocation());
+            Log.d("Current Loc string",new Gson().toJson(loc));
 
             if(flag.equals("start"))
             {
@@ -114,6 +144,19 @@ public class MapsActivity extends FragmentActivity {
             }
         }
     };
+    public static double distCovered(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 3958.75;  //this is in miles I believe
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        double sindLat = Math.sin(dLat / 2);
+        double sindLng = Math.sin(dLng / 2);
+        double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
+                * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double dist = earthRadius * c;
+
+        return dist;
+    }
 
     private Runnable updateServerWithCurrentLocation = new Runnable()
     {
@@ -124,15 +167,17 @@ public class MapsActivity extends FragmentActivity {
                 //Inform server about current location
                 AsyncHttpClient client = new AsyncHttpClient();
                 RequestParams params = new RequestParams();
-                params.put("CurrentLocation", getCurrentLocation());
+                params.put("CurrentLocation", new Gson().toJson(getCurrentLocation()));
 
-                client.get("http://localhost:8080",params ,new AsyncHttpResponseHandler() {
+
+                client.get("http://localhost:8080", params, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         // status has to be 200
-                        Log.d("Response", ""+responseBody);
+                        Log.d("Response", "" + responseBody);
 
                     }
+
                     @Override
                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                         Log.d("Failed", "On failuer called");
@@ -149,7 +194,6 @@ public class MapsActivity extends FragmentActivity {
     {
         public void run()
         {
-
             AsyncHttpClient client = new AsyncHttpClient();
             RequestParams params = new RequestParams();
             params.put("CurrentLocation", getCurrentLocation());
@@ -160,15 +204,12 @@ public class MapsActivity extends FragmentActivity {
                     // status has to be 200
                     Log.d("Response", ""+responseBody);
                    //Call addPeopleOnMap()
-
                 }
-
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                     Log.d("Failed", "On failuer called");
                 }
             });
-
             Log.d("Thread 2", "Excecuted");
             handler.postDelayed(this, 20000); // Thread running after 20 sec
         }
