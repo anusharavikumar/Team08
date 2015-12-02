@@ -29,7 +29,7 @@ public class DateHandler extends DialogFragment  implements DatePickerDialog.OnD
     @Override
     public void onDateSet(DatePicker view, int year, int dateSetting, int dayOfMonth) {
         Context context;
-        String val = dateSetting+":"+(dayOfMonth+1)+":"+year;
+        String val = (dateSetting+1)+":"+(dayOfMonth)+":"+year;
         TextView tv = (TextView) getActivity().findViewById(R.id.textView6);
         tv.setText(val);
 

@@ -3,45 +3,46 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@drawable/backgd">
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="start date"
+        android:layout_width="35dp"
+        android:layout_height="30dp"
+
         android:id="@+id/button"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
+
+        android:layout_alignBottom="@+id/textView6"
+        android:layout_toEndOf="@+id/textView6" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="start time"
+        android:layout_width="35dp"
+        android:layout_height="30dp"
+
         android:id="@+id/button1"
-        android:layout_marginLeft="97dp"
-        android:layout_alignTop="@+id/button"
-        android:layout_toEndOf="@+id/button"
-        android:layout_marginStart="87dp" />
+        android:layout_marginLeft="70dp"
+        android:layout_alignBottom="@+id/textView6"
+        android:layout_alignParentEnd="true" />
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=" End date  "
+        android:layout_width="35dp"
+        android:layout_height="30dp"
+
         android:id="@+id/button3"
 
+        android:layout_marginTop="48dp"
         android:layout_below="@+id/button"
-        android:layout_alignEnd="@+id/button"
-        android:layout_marginTop="64dp" />
+        android:layout_toEndOf="@+id/button5" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=" End time  "
+        android:layout_width="35dp"
+        android:layout_height="30dp"
+
         android:id="@+id/button4"
 
-        android:layout_marginLeft="97dp"
-        android:layout_alignTop="@+id/button3"
-        android:layout_toEndOf="@+id/button3"
-        android:layout_marginStart="87dp" />
+        android:layout_marginLeft="70dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/button3"
+        android:layout_alignTop="@+id/button3" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -55,22 +56,22 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Description:"
         android:id="@+id/textView"
+        android:layout_marginTop="20dp"
         android:layout_alignParentStart="true"
-
-        android:layout_alignTop="@+id/editText"
-        android:layout_toStartOf="@+id/button1"
-        android:layout_alignBottom="@+id/editText" />
+        android:layout_alignBottom="@+id/editText"
+        android:layout_above="@+id/editText2" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Venue"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Venue:"
         android:id="@+id/textView2"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView"
-        android:layout_alignEnd="@+id/textView" />
+        android:layout_alignBottom="@+id/editText2"
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -85,8 +86,9 @@
         android:layout_height="wrap_content"
         android:text="Create Event"
         android:id="@+id/button5"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/button3" />
+        android:layout_below="@+id/button3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="46dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -95,41 +97,43 @@
         android:text="Create an Event"
         android:id="@+id/textView3"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_toStartOf="@+id/button1" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
-        android:visibility = "invisible"
+
+        android:layout_marginLeft="40dp"
+        android:text="HH:MM"
         android:id="@+id/textView8"
-        android:layout_below="@+id/button1"
-        android:layout_alignStart="@+id/button1" />
+        android:layout_alignTop="@+id/textView6"
+        android:layout_toEndOf="@+id/textView7" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
-        android:visibility = "invisible"
+        android:layout_marginLeft="40dp"
+        android:text="HH:MM"
         android:id="@+id/textView5"
-        android:layout_below="@+id/button1"
-        android:layout_alignStart="@+id/button1" />
+        android:layout_alignTop="@+id/textView7"
+        android:layout_toEndOf="@+id/button5" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
-        android:visibility = "invisible"
+        android:text="DD/MM/YYYY"
+        android:layout_marginLeft="10dp"
         android:id="@+id/textView6"
-        android:layout_below="@+id/button1"
-        android:layout_alignStart="@+id/button1" />
+        android:layout_marginTop="69dp"
+        android:layout_below="@+id/editText2"
+        android:layout_toStartOf="@+id/textView8" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
-        android:visibility = "invisible"
+        android:layout_marginLeft="30dp"
+        android:text="DD/MM/YYYY"
         android:id="@+id/textView7"
-        android:layout_below="@+id/button1"
-        android:layout_alignStart="@+id/button1" />
+        android:layout_toStartOf="@+id/button3"
+        android:layout_alignTop="@+id/button3" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -143,9 +147,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_alignParentStart="true"
         android:text="Title:"
         android:id="@+id/textView9"
         android:layout_alignBottom="@+id/title"
         android:layout_alignStart="@+id/textView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Start Date&amp;Time:"
+        android:id="@+id/textView10"
+        android:layout_alignBottom="@+id/textView6"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="End Date&amp;Time:"
+        android:id="@+id/textView11"
+        android:layout_alignTop="@+id/textView7"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
