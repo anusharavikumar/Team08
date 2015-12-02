@@ -104,8 +104,8 @@ class eventDetails extends ArrayAdapter<String> {
         Button btn = (Button) row.findViewById(R.id.friendButton);
         text.setText(event_name[position]);
         venue.setText(event_venue[position]);
-        date.setText(event_date[position] + "to" + event_endDate[position]);
-        time.setText(event_time[position] + "to" + event_endtime[position]);
+        date.setText(event_date[position] + " to " + event_endDate[position]);
+        time.setText(event_time[position] + " to " + event_endtime[position]);
         id.setText(eventId[position]);
         title1.setText(title[position]);
         View button1 = row.findViewById(R.id.friendButton);
