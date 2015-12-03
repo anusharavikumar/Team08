@@ -14,10 +14,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -116,7 +116,13 @@ public class MapsActivity extends FragmentActivity {
         skiPath= new PolylineOptions().geodesic(true);
         mMap.setMyLocationEnabled(true);
         mMap.setOnMyLocationChangeListener(myLocationChangeListener);
-        //addPeopleOnMap(new LatLng(37.560000,-122.044999), "Dhanu");
+
+        //addPeopleOnMap(new LatLng(37.560000, -122.044999), "Dhanu");37.3359136,"longitude":-121.8849874,
+        addPeopleOnMap(new LatLng(37.3339136,-121.8819874), "Anusha");
+        addPeopleOnMap(new LatLng(37.3359136,-121.8839874), "Dhanu");
+        addPeopleOnMap(new LatLng(37.337136,-121.8845874), "Purvi");
+        addPeopleOnMap(new LatLng(37.3359136,-121.8879874), "Goudamy");
+        addPeopleOnMap(new LatLng(37.3351136,-121.8899874), "Aastha");
     }
 
     private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
@@ -144,6 +150,7 @@ public class MapsActivity extends FragmentActivity {
             }
         }
     };
+
     public static double distCovered(double lat1, double lng1, double lat2, double lng2) {
         double earthRadius = 3958.75;  //this is in miles I believe
         double dLat = Math.toRadians(lat2-lat1);
@@ -168,8 +175,6 @@ public class MapsActivity extends FragmentActivity {
                 AsyncHttpClient client = new AsyncHttpClient();
                 RequestParams params = new RequestParams();
                 params.put("CurrentLocation", new Gson().toJson(getCurrentLocation()));
-
-
                 client.get("http://localhost:8080", params, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -229,6 +234,23 @@ public class MapsActivity extends FragmentActivity {
                 .anchor(0.0f, 1.0f)); // Anchors the marker on the bottom left);
     }
 
+   /* @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
 
+        outState.putSerializable("PointList", (Serializable) pointList);
+        outState.putString("Flag", flag);
+        outState.putSerializable("Session", (Serializable) session);
+        Log.d("Map","onSaveInstanceState called");
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d("Map", "onRestoreInstanceState called");
+        pointList=(List<LatLng>)savedInstanceState.getSerializable("PointList");
+        flag=savedInstanceState.getString("Flag");
+        session=(SessionDetails)savedInstanceState.getSerializable("Session");
+    } */
 }
 
