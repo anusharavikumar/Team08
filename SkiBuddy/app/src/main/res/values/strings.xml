@@ -8,5 +8,6 @@
     <string name="title_activity_ski_details">SkiDetailsActivity</string>
     <string name="title_activity_ski_detail">SkiDetailActivity</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_session_trace">SessionTrace</string>
 
 </resources>

@@ -4,6 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:background="@drawable/backgd"
+    android:gravity="center"
     >
     <ImageView android:src="@drawable/view"
         android:layout_height="0dp"
@@ -12,6 +13,7 @@
         android:padding="10dp"
         android:id="@+id/pic">
     </ImageView>
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="0dp"
@@ -102,8 +104,14 @@
 
             </TableRow>
 
-
         </TableLayout>
 
     </ScrollView>
+
+    <Button android:layout_weight="0.05" android:layout_height="wrap_content" android:layout_width="match_parent" android:textSize="15dp"
+        android:text="ViewTrace"
+        android:id="@+id/ViewTrace"
+        android:layout_gravity="center_horizontal"
+        android:onClick="viewTrace"> </Button>
+
 </LinearLayout>

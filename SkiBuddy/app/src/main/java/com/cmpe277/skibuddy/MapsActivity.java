@@ -17,14 +17,19 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class MapsActivity extends FragmentActivity {
 
@@ -58,7 +63,6 @@ public class MapsActivity extends FragmentActivity {
         //Uncomment this when integrated with server
         //updateServerWithCurrentLocation.run();
         //getOtherUsersLocation.run();
-
     }
 
     public void onStart(View view)
@@ -71,6 +75,7 @@ public class MapsActivity extends FragmentActivity {
             session.Session_start = sdf.format(cal.getTime());
         }
     }
+
     public void onStop(View view)
     {
         if(!flag.equals("stop")) {
@@ -171,24 +176,21 @@ public class MapsActivity extends FragmentActivity {
         {
             if(locationSet)
             {
-                //Inform server about current location
+            //Inform server about current location
                 AsyncHttpClient client = new AsyncHttpClient();
-                RequestParams params = new RequestParams();
-                params.put("CurrentLocation", new Gson().toJson(getCurrentLocation()));
-                client.get("http://localhost:8080", params, new AsyncHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        // status has to be 200
-                        Log.d("Response", "" + responseBody);
+                try {
+                    StringEntity entity = new StringEntity("{'data': [{'user_id':'shm', 'CurrentLocation': {'latitude':37.5771021,'longitude':-122.0445751,'mVersionCode':'1'}}]}");
+                    client.post(getApplicationContext(), "http://52.91.8.130:8000/updateLocation/", entity, "application/json",
+                            new JsonHttpResponseHandler(){
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                    Log.d("Response", "" + response);
+                                }
+                            });
+                }
+                catch(UnsupportedEncodingException e) {
 
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        Log.d("Failed", "On failuer called");
-                    }
-
-                });
+                }
             }
             Log.d("Thread", "Excecuted");
             handler.postDelayed(this, 20000); // Thread running after 20 sec
