@@ -77,7 +77,7 @@ public class MainActivity extends FragmentActivity implements
     private static String facebookemail;
     private static String googleuserid;
     private static String facebookuserid;
-    //private static String url;
+    private static String url;
 
     public static GoogleApiClient getGoogleAPIclient(){
         return mGoogleApiClient;
@@ -103,6 +103,9 @@ public class MainActivity extends FragmentActivity implements
         }else{
             return googlename;
         }
+    }
+    public static String getURL(){
+        return url;
     }
     /*public static String geturl(){
         if(url == null){
@@ -200,6 +203,7 @@ public class MainActivity extends FragmentActivity implements
                         request.executeAsync();
                         //updateUI(true);
                         //facebookurl = "https://graph.facebook.com/" + FacebookUserID + "/picture?type=large";
+                        url = "https://graph.facebook.com/" + facebookuserid + "/picture?type=large";
                         new getProfileURLAndSetImageView(profilepic, FacebookUserID, true).execute();
                     }
 
@@ -289,7 +293,11 @@ public class MainActivity extends FragmentActivity implements
             googleuserid = acct.getId();
             googleemail = acct.getEmail();
             googlename = acct.getDisplayName();
-            new getProfileURLAndSetImageView(profilepic, googleuserid, false).execute();
+            url = "https://www.googleapis.com/plus/v1/people/" + googleuserid + "?fields=image&key=AIzaSyCkDrLVCePMsRyRg6JlNo1tBVX6wqygB8s";
+
+            if (googleuserid != null) {
+                new getProfileURLAndSetImageView(profilepic, googleuserid, false).execute();
+            }
             //updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
@@ -394,9 +402,13 @@ public class MainActivity extends FragmentActivity implements
 
             if (isFacebook){
                 this.inputurl = "https://graph.facebook.com/" + urlString + "/picture?type=large";
+                url = "https://graph.facebook.com/" + urlString + "/picture?type=large";
             }else {
                 this.inputurl = "https://www.googleapis.com/plus/v1/people/" + urlString + "?fields=image&key=AIzaSyCkDrLVCePMsRyRg6JlNo1tBVX6wqygB8s";
+                url = "https://www.googleapis.com/plus/v1/people/" + urlString + "?fields=image&key=AIzaSyCkDrLVCePMsRyRg6JlNo1tBVX6wqygB8s";
             }
+
+
             this.isFacebook = isFacebook;
             this.i = profileimage;
         }
@@ -436,8 +448,8 @@ public class MainActivity extends FragmentActivity implements
                     }
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException a) {
+                    a.printStackTrace();
                 } finally {
                     if (urlConnection != null)
                         urlConnection.disconnect();
@@ -492,6 +504,23 @@ public class MainActivity extends FragmentActivity implements
             findViewById(R.id.login_button).setVisibility(View.GONE);
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
 
+            /*AsyncHttpClient client = new AsyncHttpClient();
+            try {
+                //StringEntity entity = new StringEntity("{'data': [{'user_id':'"+getUserEmail()+"'}}]}");
+                StringEntity entity = new StringEntity("{'data': [{'user_id':'harsha'}]}");
+
+                client.post(getApplicationContext(), "http://52.91.8.130:8000/checkUser/", entity, "application/json",
+                        new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                Log.d("Response", "" + response);
+                            }
+                        });
+            } catch(UnsupportedEncodingException e) {
+
+                        }
+
+            */
 
            /*if (transitionToNextScreen) {
                 Timer t = new Timer();

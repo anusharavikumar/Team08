@@ -4,7 +4,6 @@ package com.cmpe277.skibuddy;
  * Created by goudamy on 10/3/2015.
  */
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -20,7 +19,7 @@ public class CreateEvent extends Fragment {
                              Bundle savedInstanceState) {
 
         final View playlist = inflater.inflate(R.layout.eventcreate, container, false);
-        playlist.setBackgroundColor(Color.CYAN);
+        //playlist.setBackgroundColor(Color.CYAN);
 
        View button = playlist.findViewById(R.id.button);
         button.setOnClickListener(

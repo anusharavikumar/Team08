@@ -1,11 +1,10 @@
 package com.cmpe277.skibuddy;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +12,7 @@ import java.util.Arrays;
 /**
  * Created by goudamy on 11/30/2015.
  */
-public class ListFriends extends AppCompatActivity {
+public class ListFriends extends Activity {
     private ListView mainListView ;
     private ArrayAdapter<String> listAdapter ;
 
@@ -26,8 +25,7 @@ public class ListFriends extends AppCompatActivity {
         mainListView = (ListView) findViewById(R.id.friendListView);
         Intent intent = getIntent();
         String id = intent.getStringExtra("Event_ID");
-        Toast.makeText(getApplicationContext(), "Here we go " + id, Toast.LENGTH_LONG)
-                .show();
+        //Toast.makeText(getApplicationContext(), "Here we go " + id, Toast.LENGTH_LONG).show();
         //TO DO: Use API's to include friends list
         String[] friends = new String[] { "Mercury", "Venus", "Earth", "Mars",
                 "Jupiter", "Saturn", "Uranus", "Neptune"};

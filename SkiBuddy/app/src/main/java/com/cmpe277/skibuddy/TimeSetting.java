@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -48,7 +47,7 @@ public class TimeSetting extends DialogFragment implements TimePickerDialog.OnTi
         Context context;
 
         val = hour +":"+ min;
-        Toast.makeText(this.getContext(), "selected time" + hour + ":" + min, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this.getContext(), "selected time" + hour + ":" + min, Toast.LENGTH_LONG).show();
 
         TextView tv = (TextView) getActivity().findViewById(R.id.textView5);
         //Set a message for user
