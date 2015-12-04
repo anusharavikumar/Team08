@@ -1,5 +1,6 @@
 package com.cmpe277.skibuddy;
 
+import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,9 +32,16 @@ public class SkiDetailActivity extends FragmentActivity {
     void populateDetails()
     {
         //TODO: Make service call and get details for the particular SKI record. Also draw map. Displaying image for now
-        Record record = ServicesHelper.shared().getSkiRecordDetailForUser("recordId");
-        skiDistance.setText(record.distance);
-        skiTime.setText(record.time);
+        final Context context = this;
+        new Thread() {
+            @Override
+            public void run() {
+                Record record = ServicesHelper.shared().getSkiRecordDetailForUser("recordId",context);
+                skiDistance.setText(record.distance);
+                skiTime.setText(record.time);
+            }
+        }.start();
+
     }
 
     @Override

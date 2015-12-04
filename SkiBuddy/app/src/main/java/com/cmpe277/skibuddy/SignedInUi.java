@@ -87,7 +87,9 @@ public class SignedInUi extends Activity {
         //MainActivity.this.startActivity(myIntent);
         Intent intent = new Intent(this, SkiDetailListActivity.class);
         intent.putExtra("userID",MainActivity.getUserAcctId());
-        //Toast.makeText(this, "Button Clicked ", Toast.LENGTH_SHORT).show();
+
+        intent.putExtra("playerID",MainActivity.getUserAcctId());
+
         startActivity(intent);
     }
     @Override
