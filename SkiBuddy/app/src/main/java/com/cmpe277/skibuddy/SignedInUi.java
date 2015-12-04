@@ -13,10 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -29,23 +27,34 @@ public class SignedInUi extends Activity {
     private TextView e;
     URL u;
     private Button skiDetails;
+    private Button events;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.signedin_ui);
-        n = (TextView) findViewById(R.id.nameid);
-        e = (TextView) findViewById(R.id.emailid);
-        i = (ImageView)findViewById(R.id.imageView);
+
         skiDetails = (Button) findViewById(R.id.skiSession);
+        events = (Button) findViewById(R.id.EventButton);
         skiDetails.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 viewSkiDetails();
             }
         });
 
+        events.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //Intent i = new Intent(getApplicationContext(), EventActivity.class);
+                //getApplicationContext().startActivity(i);
+                //startActivity(i);
+                Intent intent = new Intent(getApplicationContext(), EventActivity.class);
+                startActivity(intent);
+            }
+        });
 
+
+        /*
 
 
         if (getIntent().getExtras() != null ) {
@@ -61,6 +70,7 @@ public class SignedInUi extends Activity {
             }
             new LoadProfileImage(i, u).execute();
         }
+        */
     }
 
     public void startMapView(View view) {
@@ -77,7 +87,9 @@ public class SignedInUi extends Activity {
         //MainActivity.this.startActivity(myIntent);
         Intent intent = new Intent(this, SkiDetailListActivity.class);
         intent.putExtra("userID",MainActivity.getUserAcctId());
-        Toast.makeText(this, "Button Clicked ", Toast.LENGTH_SHORT).show();
+
+        intent.putExtra("playerID",MainActivity.getUserAcctId());
+
         startActivity(intent);
     }
     @Override

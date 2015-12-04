@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/row">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/name"
+
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text=""
+        android:visibility = "invisible"
+        android:id="@+id/eventid"
+        android:layout_below="@+id/name"
+      />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/time"
+
+        android:layout_below="@+id/date"
+        android:layout_alignStart="@+id/date" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:layout_marginTop="15dp"
+        android:id="@+id/venue"
+        android:layout_below="@+id/time"
+        android:layout_alignStart="@+id/time" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/date"
+
+        android:layout_alignTop="@+id/textView3"
+        android:layout_toEndOf="@+id/textView4" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/title"
+
+        android:layout_below="@+id/eventid"
+        android:layout_alignParentStart="true" />
+
+
+    <CheckBox
+
+        android:adjustViewBounds="true"
+        android:id="@+id/checkBox"
+        android:button="@null"
+        android:background="@drawable/favorite"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+
+        android:layout_below="@+id/venue"
+        android:layout_alignParentStart="true"
+         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginTop="15dp"
+        android:text="Time:"
+        android:id="@+id/textView"
+        android:layout_below="@+id/date"
+        android:layout_alignStart="@+id/textView3" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Venue:"
+        android:id="@+id/textView4"
+        android:layout_below="@+id/time"
+        android:layout_toEndOf="@+id/eventid" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text=""
+        android:id="@+id/title1"
+        android:layout_marginTop="15dp"
+        android:layout_alignTop="@+id/eventid"
+        android:layout_toEndOf="@+id/eventid" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Date:"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/title1"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+
+        android:id="@+id/friendButton"
+        android:onClick="myClickHandler"
+        android:background="@drawable/skiers"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/checkBox"
+        android:layout_alignTop="@+id/checkBox" />
+
+</RelativeLayout>
