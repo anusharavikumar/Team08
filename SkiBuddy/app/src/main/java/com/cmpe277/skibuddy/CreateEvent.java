@@ -64,11 +64,11 @@ public class CreateEvent extends Fragment {
                     @Override
                     public void onClick(View v) {
                         EditText venue_text = (EditText) playlist.findViewById(R.id.editText);
-                        String venue = venue_text.getText().toString();
+                        String desc = venue_text.getText().toString();
                         EditText title_text = (EditText) playlist.findViewById(R.id.title);
                         String title = venue_text.getText().toString();
                         EditText desc_text = (EditText) playlist.findViewById(R.id.editText2);
-                        String desc = desc_text.getText().toString();
+                        String venue = desc_text.getText().toString();
                         TextView text = (TextView) playlist.findViewById(R.id.textView8);
                         String input = text.getText().toString();
                         TextView text1 = (TextView) playlist.findViewById(R.id.textView5);
@@ -77,8 +77,37 @@ public class CreateEvent extends Fragment {
                         String input2 = text2.getText().toString();
                         TextView text3 = (TextView) playlist.findViewById(R.id.textView7);
                         String input3 = text3.getText().toString();
-                        Toast.makeText(getContext(), input + "-" + input1 + "-" + input2 + "-" + input3+"-"+desc+"-"+venue+"-"+title, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getContext(), input + "-" + input1 + "-" + input2 + "-" + input3+"-"+desc+"-"+venue+"-"+title, Toast.LENGTH_LONG).show();
                         // TO DO: add the values to the database
+                        
+                        String start = input2 +"T"+ input+":00.000000Z";
+                        String end = input3 +"T" + input1+":00.000000Z";
+                        String entire = "'user_id'"+":'"+"hmusunuru"+"',"+"'title'"+":'"+title+"',"+"'start_time'"+":'"+start+"',"+"'end_time'"+":'"+end+"',"+"'description'"+":'"+desc+"',"+"'venue'"+":'"+venue+"'";
+
+                        AsyncHttpClient client = new AsyncHttpClient();
+                        RequestParams params = new RequestParams();
+                        try {
+                            StringEntity entity = new StringEntity("{'data': [{"+ entire+"}]}");
+
+                            client.post(getContext(), "http://52.91.8.130:8000:8000/createEvent/", entity, "application/json",
+                                    new AsyncHttpResponseHandler() {
+                                        @Override
+                                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                            Toast.makeText(getContext(),  "hello", Toast.LENGTH_LONG).show();
+                                        }
+
+                                        @Override
+                                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                            Log.d("Failed", "On failure called");
+                                        }
+                                    });
+                        }
+
+                        catch(UnsupportedEncodingException e) {
+
+                        }
+
+                        
                     }
                 }
         );
