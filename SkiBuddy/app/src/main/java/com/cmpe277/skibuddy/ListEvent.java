@@ -22,17 +22,17 @@ import android.widget.Toast;
 public class ListEvent extends Fragment {
 
     //To Do: use APIs to call all the details of the event and fill in the following array structure
-    String[] name = {"ski", "happy sking", "skydiving", "skiers"};
+    String[] name = {"Tahoe Ski 2015", "Snowboarding Competition", "Yosemite Skiers Race", "Mount Everest Race"};
     String[] start_date = {"10-20-2015", "10-21-2015", "10-22-2015", "10-23-2015"};
     String[] end_date = {"10-20-2015", "10-21-2015", "10-22-2015", "10-23-2015"};
     String[] start_time = {"10:20", "10:21", "10:22", "10:23"};
     String[] end_time = {"11:20", "11:21", "11:22", "12:23"};
     String[] eventId = {"1", "2", "3", "4"};
-    String[] title = {"1", "2", "3", "4"};
+    String[] title = {"Tahoe champioship skiers", "Sierra snowboarders", "Yosemite Regionals Race", "Can you make it?"};
     //Here join variable is used to find if the user has joined the event or not
     boolean[] join = {true, false, true, false};
     ListView listview;
-    String[] venue = {"Fremont", "Livermore", "SanJose", "Berkley"};
+    String[] venue = {"Tahoe", "Mount Hood", "Yosemite", "Himalayas"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

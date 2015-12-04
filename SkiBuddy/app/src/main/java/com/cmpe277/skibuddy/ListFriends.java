@@ -3,6 +3,8 @@ package com.cmpe277.skibuddy;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -37,5 +39,19 @@ public class ListFriends extends Activity {
 
 
         mainListView.setAdapter( listAdapter );
+
+        mainListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch(position){
+                    default:
+                        Intent i = new Intent(getApplicationContext(), SkiDetailListActivity.class);
+                        i.putExtra("user_id", "harsha");
+                        startActivity(i);
+                }
+
+            }
+        });
     }
 }
