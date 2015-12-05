@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +40,8 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.plus.Plus;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,12 +49,16 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
-public class MainActivity extends FragmentActivity implements
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
+
+public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener{
 
@@ -125,6 +131,12 @@ public class MainActivity extends FragmentActivity implements
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
         continuebutton = (Button)findViewById(R.id.buttonContinue);
+
+        /*if (!isFacebook || !mGoogleApiClient.isConnected()){
+            getSupportActionBar().hide();
+        }else{
+            getSupportActionBar().show();
+        }*/
 
         //this.getActionBar().show();
         //GOOGLE
@@ -333,6 +345,7 @@ public class MainActivity extends FragmentActivity implements
 
     private void updateUI(boolean signedIn) {
         if (!signedIn) {
+            getSupportActionBar().hide();
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.login_button).setVisibility(View.VISIBLE);
             profilepic.setVisibility(View.GONE);
@@ -347,7 +360,9 @@ public class MainActivity extends FragmentActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //if (isFacebook || mGoogleApiClient.isConnected()) {
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+        //}
         return true;
     }
 
@@ -456,6 +471,7 @@ public class MainActivity extends FragmentActivity implements
                 }
                 //System.out.println("GOOGLE"+url2);
                 try{
+                    url = url2;
                     imageUrl = new URL(url2);
                 }catch (MalformedURLException e)
                 {
@@ -481,6 +497,7 @@ public class MainActivity extends FragmentActivity implements
         }
 
         protected void onPostExecute(Bitmap result) {
+            getSupportActionBar().show();
             i.setImageBitmap(result);
             i.setTag(imageUrl.toString());
             i.setVisibility(View.VISIBLE);
@@ -504,10 +521,10 @@ public class MainActivity extends FragmentActivity implements
             findViewById(R.id.login_button).setVisibility(View.GONE);
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
 
-            /*AsyncHttpClient client = new AsyncHttpClient();
+
+            AsyncHttpClient client = new AsyncHttpClient();
             try {
-                //StringEntity entity = new StringEntity("{'data': [{'user_id':'"+getUserEmail()+"'}}]}");
-                StringEntity entity = new StringEntity("{'data': [{'user_id':'harsha'}]}");
+                StringEntity entity = new StringEntity("{'data': [{'user_id':'" + getUserEmail() + "', 'name':'" + getname() + "', 'photo_url':'" + getURL() + "'}]}");
 
                 client.post(getApplicationContext(), "http://52.91.8.130:8000/checkUser/", entity, "application/json",
                         new JsonHttpResponseHandler() {
@@ -516,17 +533,11 @@ public class MainActivity extends FragmentActivity implements
                                 Log.d("Response", "" + response);
                             }
                         });
-            } catch(UnsupportedEncodingException e) {
+            }
+            catch(UnsupportedEncodingException e) {
+                    e.printStackTrace();
+            }
 
-                        }
-
-            */
-
-           /*if (transitionToNextScreen) {
-                Timer t = new Timer();
-                t.schedule(new TimerTask() {
-                    @Override
-                    public void run() {*/
 
             continuebutton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
