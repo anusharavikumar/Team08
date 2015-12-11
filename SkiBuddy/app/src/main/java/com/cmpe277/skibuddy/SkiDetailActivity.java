@@ -1,11 +1,10 @@
 package com.cmpe277.skibuddy;
 
 
-import android.content.Intent;
-
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 
 import com.cmpe277.skibuddy.helpers.ServicesHelper;
 
-public class SkiDetailActivity extends FragmentActivity {
+public class SkiDetailActivity extends AppCompatActivity {
 
     private TextView skiDistance;
     private TextView skiTime;

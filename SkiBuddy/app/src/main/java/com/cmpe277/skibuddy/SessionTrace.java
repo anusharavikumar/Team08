@@ -1,7 +1,7 @@
 package com.cmpe277.skibuddy;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -10,7 +10,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-public class SessionTrace extends FragmentActivity {
+public class SessionTrace extends AppCompatActivity {//FragmentActivity {
 
     private GoogleMap mMap;
     @Override

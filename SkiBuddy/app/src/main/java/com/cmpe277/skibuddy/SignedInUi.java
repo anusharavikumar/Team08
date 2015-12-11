@@ -1,11 +1,11 @@
 package com.cmpe277.skibuddy;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +20,7 @@ import java.net.URL;
 /**
  * Created by anusha on 11/25/15.
  */
-public class SignedInUi extends Activity {
+public class SignedInUi extends AppCompatActivity {
 
     private ImageView i;
     private TextView n;
