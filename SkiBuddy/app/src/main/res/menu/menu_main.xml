@@ -2,11 +2,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        app:showAsAction="always" />
-
+        app:showAsAction="never" />
     <item android:id="@+id/action_signout" android:title="Signout"
         app:showAsAction="always"/>
 
-    <item android:id="@+id/action_signoutanddisconnect" android:title="Signout and Disconnect"
+
+    <item android:id="@+id/action_signoutanddisconnect" android:title="Disconnect"
          app:showAsAction="always"/>
 </menu>

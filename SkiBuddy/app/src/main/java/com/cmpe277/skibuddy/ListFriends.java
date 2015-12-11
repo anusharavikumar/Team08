@@ -29,8 +29,8 @@ public class ListFriends extends Activity {
         String id = intent.getStringExtra("Event_ID");
         //Toast.makeText(getApplicationContext(), "Here we go " + id, Toast.LENGTH_LONG).show();
         //TO DO: Use API's to include friends list
-        String[] friends = new String[] { "Mercury", "Venus", "Earth", "Mars",
-                "Jupiter", "Saturn", "Uranus", "Neptune"};
+        String[] friends = new String[] {"Anusha", "Goudamy", "Sockalingam", "Dhanu",
+                "Aastha", "Purvi", "Harsha", "Tilak"};
         ArrayList<String> friendList = new ArrayList<String>();
         friendList.addAll( Arrays.asList(friends) );
 
