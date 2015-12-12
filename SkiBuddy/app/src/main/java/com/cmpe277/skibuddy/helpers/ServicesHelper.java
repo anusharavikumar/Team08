@@ -41,7 +41,7 @@ public class ServicesHelper {
         return shared;
     }
 
-    public ArrayList<Record> getAllSkiRecordsForUser( String userId, String playerId, Context context ) {
+    /*public ArrayList<Record> getAllSkiRecordsForUser( String userId, String playerId, Context context ) {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         try {
@@ -74,7 +74,7 @@ public class ServicesHelper {
         }
         ArrayList<Record> arrayOfRecords = Record.getRecords();
         return arrayOfRecords;
-    }
+    }*/
 
     public Record getSkiRecordDetailForUser( String recordID ,Context context) {
         /*AsyncHttpClient client = new AsyncHttpClient();
