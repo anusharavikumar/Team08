@@ -1,5 +1,6 @@
 package com.cmpe277.skibuddy;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -50,6 +51,8 @@ public class MapsActivity extends AppCompatActivity {
     Calendar cal ;
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
     private ArrayList<Marker> currentMarkers;
+    String eventId;
+    String url="http://52.90.230.67:8000";
 
     public void setCurrentLocation(LatLng location)
     {
@@ -65,6 +68,9 @@ public class MapsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        Intent intent = getIntent();
+        eventId = intent.getStringExtra("EventID");
+
         setUpMapIfNeeded();
 
         //Uncomment this when integrated with server
@@ -79,7 +85,7 @@ public class MapsActivity extends AppCompatActivity {
             pointList = new ArrayList<LatLng>();
             session = new SessionDetails();
             cal=Calendar.getInstance();
-            session.Session_start = sdf.format(cal.getTime());
+            session.start_time = sdf.format(cal.getTime());
         }
     }
 
@@ -89,8 +95,10 @@ public class MapsActivity extends AppCompatActivity {
             flag = "stop";
             cal = Calendar.getInstance();
             session.Session_name=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+            if(eventId!=null)
+            session.Event_id=eventId;
             session.User_id=MainActivity.getUserEmail();
-            session.Session_end = sdf.format(cal.getTime());
+            session.end_time = sdf.format(cal.getTime());
             session.Session_Data = pointList;
             session.distance=distCovered(pointList.get(0).latitude, pointList.get(0).longitude, pointList.get(pointList.size() - 1).latitude, pointList.get(pointList.size() - 1).longitude);
             sendInformationToServer(session);
@@ -102,6 +110,21 @@ public class MapsActivity extends AppCompatActivity {
     {
         Gson gson = new Gson();
         String json = gson.toJson(s);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        try {
+            StringEntity entity = new StringEntity("{'data': ["+json+"]}");
+            client.post(getApplicationContext(), url+"/endSession/", entity, "application/json",
+                    new JsonHttpResponseHandler(){
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            Log.d("Response", "" + response);
+                        }
+                    });
+        }
+        catch(UnsupportedEncodingException e) {
+
+        }
 
         // Implement code to send it to server
         System.out.println("Info sent to server: "+ json);
@@ -191,8 +214,8 @@ public class MapsActivity extends AppCompatActivity {
             //Inform server about current location
                 AsyncHttpClient client = new AsyncHttpClient();
                 try {
-                    StringEntity entity = new StringEntity("{'data': [{'user_id':'shm', 'CurrentLocation': {'latitude':37.5771021,'longitude':-122.0445751,'mVersionCode':'1'}}]}");
-                    client.post(getApplicationContext(), "http://52.90.230.67:8000/updateLocation/", entity, "application/json",
+                    StringEntity entity = new StringEntity("{'data': [{'user_id':'"+MainActivity.getUserEmail()+"', 'CurrentLocation': "+new Gson().toJson(getCurrentLocation())+"}]}");
+                    client.post(getApplicationContext(), url+"/updateLocation/", entity, "application/json",
                             new JsonHttpResponseHandler(){
                                 @Override
                                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

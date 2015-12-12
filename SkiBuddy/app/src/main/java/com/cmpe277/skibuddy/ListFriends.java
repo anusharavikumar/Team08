@@ -18,6 +18,7 @@ import java.util.Arrays;
 public class ListFriends extends Activity {
     private ListView mainListView ;
     private ArrayAdapter<String> listAdapter ;
+    String eventId;
 
     /** Called when the activity is first created. */
     @Override
@@ -28,6 +29,7 @@ public class ListFriends extends Activity {
         mainListView = (ListView) findViewById(R.id.friendListView);
         Intent intent = getIntent();
         String id = intent.getStringExtra("Event_ID");
+        eventId = id;
         //Toast.makeText(getApplicationContext(), "Here we go " + id, Toast.LENGTH_LONG).show();
         //TO DO: Use API's to include friends list
         String[] friends = new String[] {"Anusha", "Goudamy", "Sockalingam", "Dhanu",
@@ -59,6 +61,7 @@ public class ListFriends extends Activity {
     public void startMapView(View view) {
         Log.d("Hello", "Hello");
         Intent intent = new Intent(this, MapsActivity.class);
+        intent.putExtra("EventId",eventId);
         startActivity(intent);
 
     }

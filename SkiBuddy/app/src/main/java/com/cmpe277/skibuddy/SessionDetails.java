@@ -14,7 +14,7 @@ public class SessionDetails {
     Double distance;
 
     List<LatLng> Session_Data;
-    String Session_start;
-    String Session_end;
+    String start_time;
+    String end_time;
 
 }
