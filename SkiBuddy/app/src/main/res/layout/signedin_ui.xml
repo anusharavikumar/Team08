@@ -14,7 +14,7 @@
         android:background="@drawable/view"
         android:textSize="20dp" />
 
-    <Button
+  <!--  <Button
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:text="Lets go skiing"
@@ -23,7 +23,7 @@
         android:layout_weight="1"
         android:textColor="#ff0010"
         android:background="@drawable/ski2"
-        android:textSize="20dp" />
+        android:textSize="20dp" /> -->
 
     <Button
         android:layout_width="match_parent"

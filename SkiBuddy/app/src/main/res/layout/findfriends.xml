@@ -2,11 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/backgd">
+    android:background="@drawable/backgd"
+    android:weightSum="1">
 
     <ListView android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="452dp"
         android:id="@+id/friendListView">
     </ListView>
 
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="Lets go skiing"
+        android:id="@+id/buttonMap"
+        android:onClick="startMapView"
+        android:layout_weight="1"
+        android:textColor="#ff0010"
+        android:background="@drawable/ski2"
+        android:textSize="20dp" />
 </LinearLayout>

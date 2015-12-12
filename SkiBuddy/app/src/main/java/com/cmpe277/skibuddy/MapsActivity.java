@@ -27,6 +27,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -87,6 +88,8 @@ public class MapsActivity extends AppCompatActivity {
         if(!flag.equals("stop")) {
             flag = "stop";
             cal = Calendar.getInstance();
+            session.Session_name=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+            session.User_id=MainActivity.getUserEmail();
             session.Session_end = sdf.format(cal.getTime());
             session.Session_Data = pointList;
             session.distance=distCovered(pointList.get(0).latitude, pointList.get(0).longitude, pointList.get(pointList.size() - 1).latitude, pointList.get(pointList.size() - 1).longitude);
@@ -189,7 +192,7 @@ public class MapsActivity extends AppCompatActivity {
                 AsyncHttpClient client = new AsyncHttpClient();
                 try {
                     StringEntity entity = new StringEntity("{'data': [{'user_id':'shm', 'CurrentLocation': {'latitude':37.5771021,'longitude':-122.0445751,'mVersionCode':'1'}}]}");
-                    client.post(getApplicationContext(), "http://52.91.8.130:8000/updateLocation/", entity, "application/json",
+                    client.post(getApplicationContext(), "http://52.90.230.67:8000/updateLocation/", entity, "application/json",
                             new JsonHttpResponseHandler(){
                                 @Override
                                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

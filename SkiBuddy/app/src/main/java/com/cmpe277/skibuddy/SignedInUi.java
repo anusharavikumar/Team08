@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -73,12 +72,12 @@ public class SignedInUi extends AppCompatActivity {
         */
     }
 
-    public void startMapView(View view) {
+  /*  public void startMapView(View view) {
         Log.d("Hello", "Hello");
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
 
-    }
+    } */
 
     private void viewSkiDetails()
     {
