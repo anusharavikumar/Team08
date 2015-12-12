@@ -12,11 +12,19 @@ import android.widget.TextView;
 
 import com.cmpe277.skibuddy.helpers.ServicesHelper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class SkiDetailActivity extends AppCompatActivity {
 
     private TextView skiDistance;
     private TextView skiTime;
     private TextView detailTitle;
+    JSONObject skiDetails ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +33,17 @@ public class SkiDetailActivity extends AppCompatActivity {
         skiDistance = (TextView) findViewById(R.id.skiDistance);
         skiTime = (TextView) findViewById(R.id.skiTime);
         detailTitle = (TextView) findViewById(R.id.detailTitle);
+        Bundle extras = getIntent().getExtras();
+        if(extras == null) {
+            skiDetails= null;
+        } else {
+            try {
+                skiDetails= new JSONObject(extras.getString("SkiDetails"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
         populateDetails();
     }
 
@@ -35,9 +54,23 @@ public class SkiDetailActivity extends AppCompatActivity {
         new Thread() {
             @Override
             public void run() {
-                Record record = ServicesHelper.shared().getSkiRecordDetailForUser("recordId",context);
-                skiDistance.setText(record.distance);
-                skiTime.setText(record.time);
+                //Record record = ServicesHelper.shared().getSkiRecordDetailForUser("recordId",context);
+                try {
+                    skiDistance.setText(skiDetails.get("distance").toString());
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aa");
+                    try {
+                        Date starttime = dateFormat.parse(skiDetails.get("start_time").toString());
+                        Date endtime = dateFormat.parse(skiDetails.get("end_time").toString());
+                        skiTime.setText(String.valueOf(endtime.getTime() - starttime.getTime()));
+                    } catch (ParseException e) {
+                        // TODO Auto-generated catch block
+
+                    }
+                    //skiTime.setText(skiDetails.get("");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         }.start();
 
