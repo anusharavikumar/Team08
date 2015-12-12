@@ -12,6 +12,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
@@ -31,6 +32,10 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
+class OtherPeople{
+    LatLng location;
+    String name;
+}
 public class MapsActivity extends AppCompatActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -43,6 +48,7 @@ public class MapsActivity extends AppCompatActivity {
     private SessionDetails session;
     Calendar cal ;
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+    private ArrayList<Marker> currentMarkers;
 
     public void setCurrentLocation(LatLng location)
     {
@@ -61,7 +67,7 @@ public class MapsActivity extends AppCompatActivity {
         setUpMapIfNeeded();
 
         //Uncomment this when integrated with server
-        //updateServerWithCurrentLocation.run();
+        updateServerWithCurrentLocation.run();
         //getOtherUsersLocation.run();
     }
 
@@ -122,13 +128,16 @@ public class MapsActivity extends AppCompatActivity {
         mMap.setMyLocationEnabled(true);
         mMap.setOnMyLocationChangeListener(myLocationChangeListener);
 
+
         //addPeopleOnMap(new LatLng(37.560000, -122.044999), "Dhanu");37.3359136,"longitude":-121.8849874,
-        addPeopleOnMap(new LatLng(37.3339136,-121.8819874), "Anusha");
-        addPeopleOnMap(new LatLng(37.3359136,-121.8839874), "Dhanu");
+        addPeopleOnMap(new LatLng(37.5393062,-122.2560391), "Anusha");
+        /*addPeopleOnMap(new LatLng(37.3359136,-121.8839874), "Dhanu");
         addPeopleOnMap(new LatLng(37.337136,-121.8845874), "Purvi");
         addPeopleOnMap(new LatLng(37.3359136,-121.8879874), "Goudamy");
-        addPeopleOnMap(new LatLng(37.3351136,-121.8899874), "Aastha");
+        addPeopleOnMap(new LatLng(37.3351136,-121.8899874), "Aastha"); */
     }
+
+
 
     private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
         @Override
@@ -231,6 +240,10 @@ public class MapsActivity extends AppCompatActivity {
         Log.d("Polyline","drawn");
     }
 
+    public void addOtherPeople(ArrayList<OtherPeople> other)
+    {
+
+    }
     public void addPeopleOnMap(LatLng latLng, String title){
         mMap.addMarker(new MarkerOptions().position(latLng).title(title).icon(BitmapDescriptorFactory.fromResource(R.drawable.m2))
                 .anchor(0.0f, 1.0f)); // Anchors the marker on the bottom left);
