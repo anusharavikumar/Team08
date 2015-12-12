@@ -18,10 +18,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -35,8 +35,8 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
 class OtherPeople{
-    LatLng location;
-    String name;
+    public LatLng location;
+    public String name;
 }
 public class MapsActivity extends AppCompatActivity {
 
@@ -50,7 +50,7 @@ public class MapsActivity extends AppCompatActivity {
     private SessionDetails session;
     Calendar cal ;
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-    private ArrayList<Marker> currentMarkers;
+    private List<Marker> currentMarkers;
     String eventId;
     String url="http://52.90.230.67:8000";
 
@@ -75,7 +75,7 @@ public class MapsActivity extends AppCompatActivity {
 
         //Uncomment this when integrated with server
         updateServerWithCurrentLocation.run();
-        //getOtherUsersLocation.run();
+        getOtherUsersLocation.run();
     }
 
     public void onStart(View view)
@@ -237,21 +237,38 @@ public class MapsActivity extends AppCompatActivity {
         public void run()
         {
             AsyncHttpClient client = new AsyncHttpClient();
-            RequestParams params = new RequestParams();
-            params.put("CurrentLocation", getCurrentLocation());
+            try {
+                StringEntity entity = null;
 
-            client.get("http://localhost:8080",params ,new AsyncHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    // status has to be 200
-                    Log.d("Response", ""+responseBody);
-                   //Call addPeopleOnMap()
-                }
-                @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                    Log.d("Failed", "On failuer called");
-                }
-            });
+                client.get(getApplicationContext(), url + "/getUsersInfo/", entity, "application/json",
+                        new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                ArrayList<OtherPeople> others=new ArrayList<OtherPeople>();
+
+                                try {
+                                    Log.d("Response", "" + response.getString("Response"));
+                                    JSONArray array = response.getJSONArray("Response");
+                                    for(int i = 0 ; i < array.length() ; i++){
+                                        if(array.getJSONObject(i).has("user_location") && array.getJSONObject(i).has("user_name") ){
+                                            OtherPeople obj=new OtherPeople();
+                                            obj.location=new LatLng(array.getJSONObject(i).getJSONObject("user_location").getDouble("latitude"),array.getJSONObject(i).getJSONObject("user_location").getDouble("longitude"));
+                                            obj.name=array.getJSONObject(i).getString("user_name");
+                                            others.add(obj);
+                                        System.out.println(array.getJSONObject(i).getJSONObject("user_location").getDouble("latitude"));
+                                        }
+                                    }
+                                    addOtherPeople(others);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+            }
+            catch(Exception e) {
+
+            }
             Log.d("Thread 2", "Excecuted");
             handler.postDelayed(this, 20000); // Thread running after 20 sec
         }
@@ -266,13 +283,37 @@ public class MapsActivity extends AppCompatActivity {
         Log.d("Polyline","drawn");
     }
 
-    public void addOtherPeople(ArrayList<OtherPeople> other)
+    public void addOtherPeople(ArrayList<OtherPeople> others)
     {
+        clearMarkers();
+        currentMarkers=new ArrayList<Marker>();
+        Log.d("CurrentMarker",""+currentMarkers);
+        for(OtherPeople o:others){
+            addPeopleOnMap(o.location,o.name);
+        }
 
     }
-    public void addPeopleOnMap(LatLng latLng, String title){
-        mMap.addMarker(new MarkerOptions().position(latLng).title(title).icon(BitmapDescriptorFactory.fromResource(R.drawable.m2))
+    public void addPeopleOnMap(LatLng latLng, String title) {
+
+        Marker mr = mMap.addMarker(new MarkerOptions().position(latLng).title(title).icon(BitmapDescriptorFactory.fromResource(R.drawable.m2))
                 .anchor(0.0f, 1.0f)); // Anchors the marker on the bottom left);
+       // currentMarkers.add(mr);
+        System.out.println("Marker"+mr);
+        System.out.println("CurrentMarker2"+currentMarkers);
+        if(currentMarkers==null)
+        {
+            System.out.println("Yes null");
+        }
+        //currentMarkers.add(mr);
+    }
+    public void clearMarkers()
+    {
+        if(currentMarkers!=null) {
+            if (currentMarkers.size() > 0)
+                for (Marker marks : currentMarkers) {
+                    marks.remove();
+                }
+        }
     }
 
    /* @Override
