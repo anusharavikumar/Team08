@@ -61,7 +61,7 @@ public class SkiDetailListActivity extends AppCompatActivity {
                 AsyncHttpClient client = new AsyncHttpClient();
                 RequestParams params = new RequestParams();
                 try {
-                    StringEntity entity = new StringEntity("{'data': [{'user_id':'rajini', 'player_id':'purvi'}]}");
+                    StringEntity entity = new StringEntity("{'data': [{'user_id':'"+userId+"', 'player_id':'"+playerId+"'}]}");
                     client.post(getApplicationContext(), "http://52.90.230.67:8000/getSkirecords/", entity, "application/json",
                             new AsyncHttpResponseHandler(Looper.getMainLooper()) {
                                 @Override
