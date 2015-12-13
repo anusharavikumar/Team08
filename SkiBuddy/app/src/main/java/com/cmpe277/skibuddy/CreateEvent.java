@@ -119,7 +119,7 @@ if(!input2.equals("DD/MM/YYYY") && !input.equals("HH:MM") && !input3.equals("DD/
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
 
-                        Log.d("success", "On suceese called");
+                       Toast.makeText(getContext(),"Event is Successfull Created", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
