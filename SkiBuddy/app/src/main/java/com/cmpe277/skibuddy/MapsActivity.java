@@ -1,12 +1,12 @@
 package com.cmpe277.skibuddy;
 
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -50,9 +50,15 @@ public class MapsActivity extends AppCompatActivity {
     private SessionDetails session;
     Calendar cal ;
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-    private List<Marker> currentMarkers;
+    List<Marker> currentMarkers=new ArrayList<Marker>();
     String eventId;
     String url="http://52.90.230.67:8000";
+    Button startB, stopB;
+
+
+    public void resetCurrentMarkers() {
+        this.currentMarkers.clear();
+    }
 
     public void setCurrentLocation(LatLng location)
     {
@@ -68,9 +74,7 @@ public class MapsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        Intent intent = getIntent();
         //eventId = intent.getExtras("EventId");
-
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
            eventId= null;
@@ -79,6 +83,9 @@ public class MapsActivity extends AppCompatActivity {
         }
 
         System.out.println("Event id received: "+eventId);
+        startB=(Button)findViewById(R.id.buttonStart);
+        stopB=(Button)findViewById(R.id.buttonStop);
+        stopB.setEnabled(false);
         setUpMapIfNeeded();
 
         //Uncomment this when integrated with server
@@ -88,7 +95,11 @@ public class MapsActivity extends AppCompatActivity {
 
     public void onStart(View view)
     {
+
         if(!flag.equals("start")) {
+            startB.setEnabled(false);
+            stopB.setEnabled(true);
+
             flag = "start";
             pointList = new ArrayList<LatLng>();
             session = new SessionDetails();
@@ -100,6 +111,8 @@ public class MapsActivity extends AppCompatActivity {
     public void onStop(View view)
     {
         if(!flag.equals("stop")) {
+            startB.setEnabled(true);
+            stopB.setEnabled(false);
             flag = "stop";
             cal = Calendar.getInstance();
             session.Session_name=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
@@ -262,7 +275,11 @@ public class MapsActivity extends AppCompatActivity {
                                                 OtherPeople obj = new OtherPeople();
                                                 obj.location = new LatLng(array.getJSONObject(i).getJSONObject("user_location").getDouble("latitude"), array.getJSONObject(i).getJSONObject("user_location").getDouble("longitude"));
                                                 obj.name = array.getJSONObject(i).getString("user_name");
+                                                if(!obj.name.equals(MainActivity.getname()))
                                                 others.add(obj);
+                                                else
+                                                System.out.println("Same user details not included");
+
                                                 System.out.println(array.getJSONObject(i).getJSONObject("user_location").getDouble("latitude"));
                                             }
                                         }
@@ -295,7 +312,7 @@ public class MapsActivity extends AppCompatActivity {
     public void addOtherPeople(ArrayList<OtherPeople> others)
     {
         clearMarkers();
-        currentMarkers=new ArrayList<Marker>();
+        resetCurrentMarkers();
         Log.d("CurrentMarker",""+currentMarkers);
         for(OtherPeople o:others){
             addPeopleOnMap(o.location,o.name);
@@ -306,7 +323,7 @@ public class MapsActivity extends AppCompatActivity {
 
         Marker mr = mMap.addMarker(new MarkerOptions().position(latLng).title(title).icon(BitmapDescriptorFactory.fromResource(R.drawable.m2))
                 .anchor(0.0f, 1.0f)); // Anchors the marker on the bottom left);
-       // currentMarkers.add(mr);
+        currentMarkers.add(mr);
         System.out.println("Marker"+mr);
         System.out.println("CurrentMarker2"+currentMarkers);
         if(currentMarkers==null)
@@ -317,8 +334,11 @@ public class MapsActivity extends AppCompatActivity {
     }
     public void clearMarkers()
     {
+        System.out.println(" Clear markers called");
+
         if(currentMarkers!=null) {
             if (currentMarkers.size() > 0)
+                System.out.println(" Removing markers ");
                 for (Marker marks : currentMarkers) {
                     marks.remove();
                 }
