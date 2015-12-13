@@ -4,8 +4,15 @@ package com.cmpe277.skibuddy;
  * Created by goudamy on 10/3/2015.
  */
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
+
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v4.app.DialogFragment;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -23,13 +31,24 @@ import java.io.UnsupportedEncodingException;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
-public class CreateEvent extends Fragment {
+public class CreateEvent extends Fragment{
+
+
+    String userName;
+    public CreateEvent()
+    {
+
+    }
+    @SuppressLint("ValidFragment")
+    CreateEvent(String user){
+        this. userName = user;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        final View playlist = inflater.inflate(R.layout.eventcreate, container, false);
-        //playlist.setBackgroundColor(Color.CYAN);
+        final View playlist = inflater.inflate(R.layout.playlist, container, false);
+
 
        View button = playlist.findViewById(R.id.button);
         button.setOnClickListener(
@@ -89,35 +108,42 @@ public class CreateEvent extends Fragment {
                         String input3 = text3.getText().toString();
                         //Toast.makeText(getContext(), input + "-" + input1 + "-" + input2 + "-" + input3+"-"+desc+"-"+venue+"-"+title, Toast.LENGTH_LONG).show();
                         // TO DO: add the values to the database
-                        
-                        String start = input2 +"T"+ input+":00.000000Z";
-                        String end = input3 +"T" + input1+":00.000000Z";
-                        String entire = "'user_id'"+":'"+"hmusunuru"+"',"+"'title'"+":'"+title+"',"+"'start_time'"+":'"+start+"',"+"'end_time'"+":'"+end+"',"+"'description'"+":'"+desc+"',"+"'venue'"+":'"+venue+"'";
 
-                        AsyncHttpClient client = new AsyncHttpClient();
-                        RequestParams params = new RequestParams();
-                        try {
-                            StringEntity entity = new StringEntity("{'data': [{"+ entire+"}]}");
+if(!input2.equals("DD/MM/YYYY") && !input.equals("HH:MM") && !input3.equals("DD/MM/YYYY") && !input1.equals("HH:MM") ) {
 
-                            client.post(getContext(), "http://52.91.8.130:8000:8000/createEvent/", entity, "application/json",
-                                    new AsyncHttpResponseHandler() {
-                                        @Override
-                                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                            Toast.makeText(getContext(),  "hello", Toast.LENGTH_LONG).show();
-                                        }
+    String start = input2 + "T" + input + ":00.000000Z";
+    String end = input3 + "T" + input1 + ":00.000000Z";
+    String entire = "'user_id'" + ":'" +  userName + "',"  + "'title'" + ":'" + title + "'," + "'start_time'" + ":'" + start + "'," + "'end_time'" + ":'" + end + "'," + "'description'" + ":'" + desc + "'," + "'venue'" + ":'" + venue + "'";
 
-                                        @Override
-                                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                                            Log.d("Failed", "On failure called");
-                                        }
-                                    });
-                        }
+    AsyncHttpClient client = new AsyncHttpClient();
+    RequestParams params = new RequestParams();
+    try {
+        StringEntity entity = new StringEntity("{'data': [{" + entire + "}]}");
 
-                        catch(UnsupportedEncodingException e) {
+        client.post(getContext(), "http://52.90.230.67:8000/createEvent/", entity, "application/json",
+                new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
-                        }
 
-                        
+                        Log.d("success", "On suceese called");
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        Log.d("Failed", "On failure called");
+                    }
+                });
+    } catch (UnsupportedEncodingException e) {
+
+    }
+
+}else{
+    Toast.makeText(getContext(), "Date and Time cannot be Empty", Toast.LENGTH_LONG)
+            .show();
+}
+
+
                     }
                 }
         );
