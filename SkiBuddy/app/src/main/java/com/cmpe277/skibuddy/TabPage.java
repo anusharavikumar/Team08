@@ -9,9 +9,10 @@ import android.support.v4.app.FragmentStatePagerAdapter;
  */
 public class TabPage extends FragmentStatePagerAdapter {
 
-
-    public TabPage(FragmentManager fm) {
+String userName;
+    public TabPage(FragmentManager fm,String user) {
         super(fm);
+        this.userName = user;
     }
 
     @Override
@@ -19,12 +20,14 @@ public class TabPage extends FragmentStatePagerAdapter {
         Fragment f = null;
         if(i == 0) {
 
-            f = new CreateEvent();
+            f = new CreateEvent(userName);
         }
            else if(i ==1){
-           f = new ListEvent();
+
+            f = new ListEvent(userName);
 
         }
+
         return f;
     }
 
