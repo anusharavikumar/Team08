@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,8 +20,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
@@ -32,9 +36,12 @@ public class ListFriends extends AppCompatActivity {
     private ListView mainListView ;
     private ArrayAdapter<String> listAdapter ;
 
+    Button startSki;
 
     String eventId;
-
+    String start, end;
+    Date startTime;
+    Date endTime;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,9 +49,28 @@ public class ListFriends extends AppCompatActivity {
         setContentView(R.layout.findfriends);
 
         mainListView = (ListView) findViewById(R.id.friendListView);
+        startSki= (Button) findViewById(R.id.buttonMap);
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("Event_ID");
+        start= intent.getStringExtra("Start");
+        System.out.println ("Start Received"+ start);
+        end = intent.getStringExtra("End");
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            startTime=sdf.parse(start);
+            endTime= sdf.parse(end);
+        } catch (ParseException e) {
+            sdf=new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+            try {
+                startTime=sdf.parse(start);
+                endTime= sdf.parse(end);
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
+
+        }
+
         setEventId(id);
         System.out.println("Event Id found"+id);
         Toast.makeText(getApplicationContext(), "Here we go " + id, Toast.LENGTH_LONG)
@@ -86,7 +112,6 @@ public class ListFriends extends AppCompatActivity {
 
             }
         });
-
                             } catch (JSONException e
                                     )
 
@@ -110,8 +135,15 @@ public class ListFriends extends AppCompatActivity {
     
     public void startMapView(View view) {
         Log.d("Hello", "Hello");
+        Boolean flag = false;
+        Date d= new Date();
+        if(startTime.compareTo(d)<=0 && endTime.compareTo(d)>=0 ){
+            flag=true;
+        }
+        System.out.println("Flag"+flag);
         Intent intent = new Intent(this, MapsActivity.class);
         intent.putExtra("EventId",getEventId());
+        intent.putExtra("Valid", flag);
         startActivity(intent);
 
     }

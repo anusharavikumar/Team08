@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -54,6 +55,7 @@ public class MapsActivity extends AppCompatActivity {
     String eventId;
     String url="http://52.90.230.67:8000";
     Button startB, stopB;
+    Boolean flagB;
 
 
     public void resetCurrentMarkers() {
@@ -80,6 +82,7 @@ public class MapsActivity extends AppCompatActivity {
            eventId= null;
         } else {
             eventId = extras.getString("EventId");
+            flagB= extras.getBoolean("flag");
         }
 
         System.out.println("Event id received: "+eventId);
@@ -122,7 +125,13 @@ public class MapsActivity extends AppCompatActivity {
             session.end_time = sdf.format(cal.getTime());
             session.Session_Data = pointList;
             session.distance=distCovered(pointList.get(0).latitude, pointList.get(0).longitude, pointList.get(pointList.size() - 1).latitude, pointList.get(pointList.size() - 1).longitude);
+            if(flagB)
             sendInformationToServer(session);
+            else
+            {
+                Toast.makeText(getApplicationContext(), "Information Not stored : Event is not active ", Toast.LENGTH_LONG).show();
+
+            }
 
         }
     }

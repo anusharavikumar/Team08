@@ -3,6 +3,7 @@ package com.cmpe277.skibuddy;
 /**
  * Created by goudamy on 10/3/2015.
  */
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -13,20 +14,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -36,6 +29,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
@@ -54,6 +49,8 @@ public class ListEvent extends Fragment {
 
     //To Do: use APIs to call all the details of the event and fill in the following array structure
     ListView listview;
+    JSONArray startTimes;
+    JSONArray endTimes;
 
     ArrayList<HashMap<String,String>> list;
     @Override
@@ -89,6 +86,9 @@ public class ListEvent extends Fragment {
                                 jArray = jsonObject.getJSONArray("join");
                                 String[] join = jArray.toString().replace("},{", " ,").replace("[","").replace("]","").replace("]","").split(",");
 
+                                endTimes = jsonObject.getJSONArray("end_time");
+                                startTimes=jsonObject.getJSONArray("start_time");
+
                                 jArray = jsonObject.getJSONArray("end_time");
                                 String[] end_time = jArray.toString().replace("},{", " ,").replace("[","").replace("]","").split(",");
 
@@ -116,6 +116,8 @@ public class ListEvent extends Fragment {
                                     temp.put("endTime", end_time[i]);
                                     temp.put("eventId",eventId[i]);
                                     temp.put("join", join[i]);
+                                    temp.put("startTime2", startTimes.get(i).toString());
+                                    temp.put("endTime2", endTimes.get(i).toString());
                                     list.add(temp);
                                 }
                                 eventDetails adapter = new eventDetails(frag,list,userName);
@@ -211,7 +213,7 @@ this.fragment = fragment;
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        myClickHandler(map.get("eventId").replace("\"", ""));
+                        myClickHandler(map.get("eventId").replace("\"", ""), map.get("startTime2"), map.get("endTime2"));
                     }
                 }
         );
@@ -292,11 +294,16 @@ this.fragment = fragment;
         return row;
 
     }
-    public void myClickHandler(String eventId) {
+    public void myClickHandler(String eventId, String start, String end) {
+
+        System.out.println("Start "+start);
+        System.out.println("End " + end);
 
 
         Intent intent = new Intent(fragment.getContext(), ListFriends.class);
         intent.putExtra("Event_ID", eventId);
+        intent.putExtra("Start", start.split("T")[0]+" "+start.split("T")[1].substring(0,8));
+        intent.putExtra("End", end.split("T")[0]+" "+start.split("T")[1].substring(0,8));
         fragment.getContext().startActivity(intent);
 
     }
