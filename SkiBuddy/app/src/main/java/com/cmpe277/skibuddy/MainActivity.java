@@ -525,9 +525,9 @@ public class MainActivity extends AppCompatActivity implements
 
             AsyncHttpClient client = new AsyncHttpClient();
             try {
-                StringEntity entity = new StringEntity("{'data': [{'user_id':'" + getUserEmail() + "', 'name':'" + getname() + "', 'photo_url':'" + getURL() + "'}]}");
+                StringEntity entity = new StringEntity("{'data': [{'user_id':'" + getUserEmail() + "', 'user_name':'" + getname() + "', 'photo_url':'" + getURL() + "'}]}");
 
-                client.post(getApplicationContext(), "http://52.91.8.130:8000/checkUser/", entity, "application/json",
+                client.post(getApplicationContext(), "http://52.90.230.67:8000/checkUser/", entity, "application/json",
                         new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
