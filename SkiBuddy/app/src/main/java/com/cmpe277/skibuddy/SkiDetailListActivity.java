@@ -14,7 +14,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.cmpe277.skibuddy.adapters.CustomRecordsAdapter;
-import com.cmpe277.skibuddy.helpers.ServicesHelper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -66,11 +65,12 @@ public class SkiDetailListActivity extends AppCompatActivity {
                     client.post(getApplicationContext(), "http://52.90.230.67:8000/getSkirecords/", entity, "application/json",
                             new AsyncHttpResponseHandler(Looper.getMainLooper()) {
                                 @Override
-                                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                              public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                     // status has to be 200
                                     Log.d("Response", "" + responseBody);
                                     try {
                                         JSONObject arr = new JSONObject(new String(responseBody));
+                                        Log.d("Response in json", "" + arr);
                                         data = arr.getJSONArray("data");
                                         final ArrayList<Record> arrayOfRecords = Record.getRecords(data);
                                         SkiDetailListActivity.this.runOnUiThread(new Runnable() {

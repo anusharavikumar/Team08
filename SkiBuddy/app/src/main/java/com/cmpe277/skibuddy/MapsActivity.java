@@ -69,8 +69,16 @@ public class MapsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         Intent intent = getIntent();
-        eventId = intent.getStringExtra("EventID");
+        //eventId = intent.getExtras("EventId");
 
+        Bundle extras = getIntent().getExtras();
+        if(extras == null) {
+           eventId= null;
+        } else {
+            eventId = extras.getString("EventId");
+        }
+
+        System.out.println("Event id received: "+eventId);
         setUpMapIfNeeded();
 
         //Uncomment this when integrated with server
@@ -118,14 +126,13 @@ public class MapsActivity extends AppCompatActivity {
                     new JsonHttpResponseHandler(){
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            Log.d("Response", "" + response);
+                            Log.d("Response received", "" + response);
                         }
                     });
         }
         catch(UnsupportedEncodingException e) {
 
         }
-
         // Implement code to send it to server
         System.out.println("Info sent to server: "+ json);
 
@@ -156,7 +163,7 @@ public class MapsActivity extends AppCompatActivity {
 
 
         //addPeopleOnMap(new LatLng(37.560000, -122.044999), "Dhanu");37.3359136,"longitude":-121.8849874,
-        addPeopleOnMap(new LatLng(37.5393062,-122.2560391), "Anusha");
+        //addPeopleOnMap(new LatLng(37.5393062,-122.2560391), "Anusha");
         /*addPeopleOnMap(new LatLng(37.3359136,-121.8839874), "Dhanu");
         addPeopleOnMap(new LatLng(37.337136,-121.8845874), "Purvi");
         addPeopleOnMap(new LatLng(37.3359136,-121.8879874), "Goudamy");
@@ -247,18 +254,20 @@ public class MapsActivity extends AppCompatActivity {
                                 ArrayList<OtherPeople> others=new ArrayList<OtherPeople>();
 
                                 try {
-                                    Log.d("Response", "" + response.getString("Response"));
-                                    JSONArray array = response.getJSONArray("Response");
-                                    for(int i = 0 ; i < array.length() ; i++){
-                                        if(array.getJSONObject(i).has("user_location") && array.getJSONObject(i).has("user_name") ){
-                                            OtherPeople obj=new OtherPeople();
-                                            obj.location=new LatLng(array.getJSONObject(i).getJSONObject("user_location").getDouble("latitude"),array.getJSONObject(i).getJSONObject("user_location").getDouble("longitude"));
-                                            obj.name=array.getJSONObject(i).getString("user_name");
-                                            others.add(obj);
-                                        System.out.println(array.getJSONObject(i).getJSONObject("user_location").getDouble("latitude"));
+                                    if(response.has("Response")) {
+                                        Log.d("Response", "" + response.getString("Response"));
+                                        JSONArray array = response.getJSONArray("Response");
+                                        for (int i = 0; i < array.length(); i++) {
+                                            if (array.getJSONObject(i).has("user_location") && array.getJSONObject(i).has("user_name")) {
+                                                OtherPeople obj = new OtherPeople();
+                                                obj.location = new LatLng(array.getJSONObject(i).getJSONObject("user_location").getDouble("latitude"), array.getJSONObject(i).getJSONObject("user_location").getDouble("longitude"));
+                                                obj.name = array.getJSONObject(i).getString("user_name");
+                                                others.add(obj);
+                                                System.out.println(array.getJSONObject(i).getJSONObject("user_location").getDouble("latitude"));
+                                            }
                                         }
+                                        addOtherPeople(others);
                                     }
-                                    addOtherPeople(others);
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
