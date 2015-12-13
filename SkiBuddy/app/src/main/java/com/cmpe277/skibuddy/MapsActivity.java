@@ -82,10 +82,11 @@ public class MapsActivity extends AppCompatActivity {
            eventId= null;
         } else {
             eventId = extras.getString("EventId");
-            flagB= extras.getBoolean("flag");
+            flagB= extras.getBoolean("Valid");
         }
 
         System.out.println("Event id received: "+eventId);
+        System.out.println("Flag received: "+flagB);
         startB=(Button)findViewById(R.id.buttonStart);
         stopB=(Button)findViewById(R.id.buttonStop);
         stopB.setEnabled(false);

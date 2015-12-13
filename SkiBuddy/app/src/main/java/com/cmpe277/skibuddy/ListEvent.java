@@ -302,8 +302,24 @@ this.fragment = fragment;
 
         Intent intent = new Intent(fragment.getContext(), ListFriends.class);
         intent.putExtra("Event_ID", eventId);
-        intent.putExtra("Start", start.split("T")[0]+" "+start.split("T")[1].substring(0,8));
-        intent.putExtra("End", end.split("T")[0]+" "+start.split("T")[1].substring(0,8));
+        String sdate,edate;
+        sdate=start.split("T")[0];
+        edate=end.split("T")[0];
+
+        if(start.split("T")[0].contains(":")){
+            String[] arr=sdate.split(":");
+           sdate=arr[2]+"-"+arr[0]+"-"+arr[1];
+
+        }
+        if(end.split("T")[0].contains(":")){
+            String[] arr=edate.split(":");
+            System.out.println("edate"+arr.toString());
+            edate=arr[2]+"-"+arr[0]+"-"+arr[1];
+
+        }
+
+        intent.putExtra("Start", sdate + " " + start.split("T")[1].substring(0,8));
+        intent.putExtra("End", edate + " " + end.split("T")[1].substring(0,8));
         fragment.getContext().startActivity(intent);
 
     }

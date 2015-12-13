@@ -55,13 +55,14 @@ public class ListFriends extends AppCompatActivity {
         String id = intent.getStringExtra("Event_ID");
         start= intent.getStringExtra("Start");
         System.out.println ("Start Received"+ start);
+        System.out.println ("End Received"+ start);
         end = intent.getStringExtra("End");
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             startTime=sdf.parse(start);
             endTime= sdf.parse(end);
         } catch (ParseException e) {
-            sdf=new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+            sdf=new SimpleDateFormat("dd:MM:yyyy HH:mm:ss");
             try {
                 startTime=sdf.parse(start);
                 endTime= sdf.parse(end);
@@ -77,7 +78,8 @@ public class ListFriends extends AppCompatActivity {
                 .show();
         //TO DO: Use API's to include friends list
 
-        String entire = "'event_id'" + ":'" + id +"'";
+        //String entire = "'event_id'" + ":'" + id +"'";
+        String entire = "'event_id'" + ":" + id +"";
         String[] frnds;
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
@@ -137,6 +139,9 @@ public class ListFriends extends AppCompatActivity {
         Log.d("Hello", "Hello");
         Boolean flag = false;
         Date d= new Date();
+        System.out.println("Date"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(d));
+        System.out.println("Start"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTime));
+        System.out.println("End"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(endTime));
         if(startTime.compareTo(d)<=0 && endTime.compareTo(d)>=0 ){
             flag=true;
         }
