@@ -13,13 +13,15 @@ public class EventActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+       super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-        TabAdapter = new TabPage(getSupportFragmentManager());
+        String userName = "test_user1";
+        TabAdapter = new TabPage(getSupportFragmentManager(),userName);
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(TabAdapter);
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(pager);
+
 
 
 
