@@ -15,7 +15,9 @@ public class EventActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-        String userName = "test_user1";
+         Intent intent = getIntent();
+        String userName = intent.getStringExtra("userName");
+      
         TabAdapter = new TabPage(getSupportFragmentManager(),userName);
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(TabAdapter);
