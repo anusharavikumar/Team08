@@ -48,7 +48,7 @@ public class SignedInUi extends AppCompatActivity {
                 //getApplicationContext().startActivity(i);
                 //startActivity(i);
                 Intent intent = new Intent(getApplicationContext(), EventActivity.class);
-                intent.putExtra("userName",MainActivity.getUserAcctId());
+                intent.putExtra("userName",MainActivity.getUserEmail());
                 startActivity(intent);
             }
         });
