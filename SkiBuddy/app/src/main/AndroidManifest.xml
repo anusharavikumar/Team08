@@ -58,11 +58,7 @@
         </activity>
         <activity
             android:name=".SkiDetailActivity"
-            android:label="@string/title_activity_ski_detail"
-            android:parentActivityName=".SkiDetailListActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.cmpe277.skibuddy.SkiDetailListActivity" />
+            android:label="@string/title_activity_ski_detail">
         </activity>
         <activity
             android:name=".SignedInUi"

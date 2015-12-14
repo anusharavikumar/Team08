@@ -5,8 +5,8 @@
     <string name="action_settings">Settings</string>
 
     <string name="facebook_app_id">849113431871932</string>
-    <string name="title_activity_ski_details">SkiDetailsActivity</string>
-    <string name="title_activity_ski_detail">SkiDetailActivity</string>
+    <string name="title_activity_ski_details">Ski Details</string>
+    <string name="title_activity_ski_detail">Ski Details</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_session_trace">SessionTrace</string>
 
