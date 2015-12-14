@@ -187,7 +187,7 @@ public class MapsActivity extends AppCompatActivity {
         mMap.setOnMyLocationChangeListener(myLocationChangeListener);
 
 
-        //addPeopleOnMap(new LatLng(37.560000, -122.044999), "Dhanu");37.3359136,"longitude":-121.8849874,
+        //addPeopleOnMap(new LatLng(37.5771881,-122.0446438), "Dhanu");//37.3359136,"longitude":-121.8849874,
         //addPeopleOnMap(new LatLng(37.5393062,-122.2560391), "Anusha");
         /*addPeopleOnMap(new LatLng(37.3359136,-121.8839874), "Dhanu");
         addPeopleOnMap(new LatLng(37.337136,-121.8845874), "Purvi");
