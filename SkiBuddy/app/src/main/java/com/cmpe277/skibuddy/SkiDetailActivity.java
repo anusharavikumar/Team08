@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,7 +29,8 @@ public class SkiDetailActivity extends AppCompatActivity {
     private TextView skiTime;
     private TextView detailTitle;
     JSONObject skiDetails ;
-    List<LatLng> pointList;
+    JSONArray trace;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,38 +51,31 @@ public class SkiDetailActivity extends AppCompatActivity {
 
         }
         populateDetails();
-        pointList=new ArrayList<LatLng>();
-        pointList.add(new LatLng(37.560000, -122.044999));
-        pointList.add(new LatLng(37.5393062,-122.2560391));
+
 
     }
 
     void populateDetails()
     {
-        //TODO: Make service call and get details for the particular SKI record. Also draw map. Displaying image for now
-        final Context context = this;
-        new Thread() {
-            @Override
-            public void run() {
-                //Record record = ServicesHelper.shared().getSkiRecordDetailForUser("recordId",context);
+
                 try {
                     skiDistance.setText(skiDetails.get("distance").toString());
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aa");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
                     try {
                         Date starttime = dateFormat.parse(skiDetails.get("start_time").toString());
                         Date endtime = dateFormat.parse(skiDetails.get("end_time").toString());
-                        skiTime.setText(String.valueOf(endtime.getTime() - starttime.getTime()));
+                        String duration = String.valueOf(((endtime.getTime() - starttime.getTime()) / 1000));
+                        trace = skiDetails.getJSONArray("location_trace");
+                        skiTime.setText( duration + " Seconds");
                     } catch (ParseException e) {
                         // TODO Auto-generated catch block
 
+
                     }
-                    //skiTime.setText(skiDetails.get("");
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-            }
-        }.start();
 
     }
 
@@ -108,8 +103,9 @@ public class SkiDetailActivity extends AppCompatActivity {
     public void viewTrace(View view)
     {
         Gson gson = new Gson();
-        String json = gson.toJson(pointList);
+        //String json = gson.toJson(pointList);
         Intent intent = new Intent(this, SessionTrace.class);
+        intent.putExtra("SkiDetails", trace.toString());
         startActivity(intent);
 
     }

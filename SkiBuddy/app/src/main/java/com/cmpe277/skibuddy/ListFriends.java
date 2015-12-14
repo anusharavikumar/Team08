@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -42,6 +43,7 @@ public class ListFriends extends AppCompatActivity {
     String start, end;
     Date startTime;
     Date endTime;
+    ArrayList<String> friendId = new ArrayList<String>();
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,8 +81,8 @@ public class ListFriends extends AppCompatActivity {
                 .show();
         //TO DO: Use API's to include friends list
 
-        //String entire = "'event_id'" + ":'" + id +"'";
-        String entire = "'event_id'" + ":" + id +"";
+        String entire = "'event_id'" + ":'" + id +"'";
+        //String entire = "'event_id'" + ":" + id +"";
         String[] frnds;
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
@@ -95,9 +97,17 @@ public class ListFriends extends AppCompatActivity {
                                 JSONObject arr = new JSONObject(new String(responseBody));
                                 JSONObject jsonObject = arr.getJSONObject("data");
                                 JSONArray jArray = jsonObject.getJSONArray("events");
-                                String[] friends = jArray.toString().replace("},{", " ,").replace("[", "").replace("]", "").replace("\"", "").split(",");
+                                //String[] friends = jArray.toString().replace("},{", " ,").replace("[", "").replace("]", "").replace("\"", "").split(",");
                                 ArrayList<String> friendList = new ArrayList<String>();
-                                friendList.addAll( Arrays.asList(friends) );
+                                {
+                                    for(int i = 0; i < jArray.length(); i++) {
+
+                                        JSONObject obj = (JSONObject) jArray.get(i);
+                                        friendList.add(obj.get("user_name").toString());
+                                        friendId.add(obj.get("user_id").toString());
+
+                                    }
+                                }
 
 
                                 listAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.friends,R.id.friendName, friendList);
@@ -109,7 +119,8 @@ public class ListFriends extends AppCompatActivity {
                 switch(position){
                     default:
                         Intent i = new Intent(getApplicationContext(), SkiDetailListActivity.class);
-                        i.putExtra("user_id", "harsha");
+                        i.putExtra("userID", MainActivity.getUserEmail());
+                        i.putExtra("playerID",friendId.get(position));
                         startActivity(i);
                 }
 
