@@ -74,7 +74,8 @@ public class ListFriends extends AppCompatActivity {
 
         setEventId(id);
         System.out.println("Event Id found"+id);
-        Toast.makeText(getApplicationContext(), "Here we go " + id, Toast.LENGTH_LONG)
+      //  Toast.makeText(getApplicationContext(), "Here we go " + id, Toast.LENGTH_LONG)
+        Toast.makeText(getApplicationContext(), "Here we go ", Toast.LENGTH_LONG)
                 .show();
         //TO DO: Use API's to include friends list
 
