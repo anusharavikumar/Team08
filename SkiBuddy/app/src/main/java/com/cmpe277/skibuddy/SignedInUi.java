@@ -86,9 +86,8 @@ public class SignedInUi extends AppCompatActivity {
         //myIntent.putExtra("key", value); //Optional parameters
         //MainActivity.this.startActivity(myIntent);
         Intent intent = new Intent(this, SkiDetailListActivity.class);
-        intent.putExtra("userID",MainActivity.getUserAcctId());
-
-        intent.putExtra("playerID",MainActivity.getUserAcctId());
+        intent.putExtra("userID",MainActivity.getUserEmail());
+        intent.putExtra("playerID",MainActivity.getUserEmail());
 
         startActivity(intent);
     }

@@ -79,8 +79,8 @@ public class ListFriends extends AppCompatActivity {
                 .show();
         //TO DO: Use API's to include friends list
 
-        //String entire = "'event_id'" + ":'" + id +"'";
-        String entire = "'event_id'" + ":" + id +"";
+        String entire = "'event_id'" + ":'" + id +"'";
+        //String entire = "'event_id'" + ":" + id +"";
         String[] frnds;
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
@@ -109,7 +109,8 @@ public class ListFriends extends AppCompatActivity {
                 switch(position){
                     default:
                         Intent i = new Intent(getApplicationContext(), SkiDetailListActivity.class);
-                        i.putExtra("user_id", "harsha");
+                        i.putExtra("userID", MainActivity.getUserEmail());
+                        i.putExtra("playerID",MainActivity.getUserEmail());
                         startActivity(i);
                 }
 
