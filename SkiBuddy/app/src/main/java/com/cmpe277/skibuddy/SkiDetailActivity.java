@@ -10,14 +10,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.cmpe277.skibuddy.helpers.ServicesHelper;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class SkiDetailActivity extends AppCompatActivity {
 
@@ -25,6 +28,7 @@ public class SkiDetailActivity extends AppCompatActivity {
     private TextView skiTime;
     private TextView detailTitle;
     JSONObject skiDetails ;
+    List<LatLng> pointList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +49,10 @@ public class SkiDetailActivity extends AppCompatActivity {
 
         }
         populateDetails();
+        pointList=new ArrayList<LatLng>();
+        pointList.add(new LatLng(37.560000, -122.044999));
+        pointList.add(new LatLng(37.5393062,-122.2560391));
+
     }
 
     void populateDetails()
@@ -99,6 +107,8 @@ public class SkiDetailActivity extends AppCompatActivity {
     }
     public void viewTrace(View view)
     {
+        Gson gson = new Gson();
+        String json = gson.toJson(pointList);
         Intent intent = new Intent(this, SessionTrace.class);
         startActivity(intent);
 

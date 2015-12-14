@@ -1,6 +1,8 @@
 package com.cmpe277.skibuddy;
 
+import android.content.Context;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -239,6 +241,8 @@ public class MapsActivity extends AppCompatActivity {
     {
         public void run()
         {
+            if(checkLocationIsOn()){
+
             if(locationSet)
             {
             //Inform server about current location
@@ -256,7 +260,7 @@ public class MapsActivity extends AppCompatActivity {
                 catch(UnsupportedEncodingException e) {
 
                 }
-            }
+            }}
             Log.d("Thread", "Excecuted");
             handler.postDelayed(this, 20000); // Thread running after 20 sec
         }
@@ -266,6 +270,7 @@ public class MapsActivity extends AppCompatActivity {
     {
         public void run()
         {
+            if(checkLocationIsOn()){
             AsyncHttpClient client = new AsyncHttpClient();
             try {
                 StringEntity entity = null;
@@ -304,7 +309,7 @@ public class MapsActivity extends AppCompatActivity {
             }
             catch(Exception e) {
 
-            }
+            }}
             Log.d("Thread 2", "Excecuted");
             handler.postDelayed(this, 20000); // Thread running after 20 sec
         }
@@ -354,7 +359,29 @@ public class MapsActivity extends AppCompatActivity {
                 }
         }
     }
+public boolean checkLocationIsOn(){
 
+
+    LocationManager lm = (LocationManager)this.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+    boolean gps_enabled = false;
+    boolean network_enabled = false;
+
+    try {
+        gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    } catch(Exception ex) {}
+
+    try {
+        network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    } catch(Exception ex) {}
+
+    if(!gps_enabled && !network_enabled) {
+        Toast.makeText(getApplicationContext(), "Please turn on the location services! ", Toast.LENGTH_LONG)
+                .show();
+        return false;
+
+    }
+    return true;
+}
    /* @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
