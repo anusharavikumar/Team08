@@ -75,10 +75,7 @@
         <activity
             android:name=".SessionTrace"
             android:label="@string/title_activity_session_trace"
-            android:parentActivityName=".SkiDetailActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.cmpe277.skibuddy.SkiDetailListActivity" />
+            >
         </activity>
 
         <activity
