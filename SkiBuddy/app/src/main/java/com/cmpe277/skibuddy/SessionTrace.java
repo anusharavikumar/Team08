@@ -56,7 +56,7 @@ public class SessionTrace extends AppCompatActivity {//FragmentActivity {
     private void setUpMap() {
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
         mMap.setMyLocationEnabled(true);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.3339136, -121.8819874), 16.0f));
+
         PolylineOptions skiPath2=new PolylineOptions().geodesic(true);
         try {
             {for(int i = 0; i < trace.length(); i++) {
@@ -70,6 +70,8 @@ public class SessionTrace extends AppCompatActivity {//FragmentActivity {
         catch (JSONException e) {
             e.printStackTrace();
         }
+        if(skiPath2.getPoints().size()>=1)
+           mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(skiPath2.getPoints().get(0), 16.0f));
         /*skiPath2=skiPath2.add(new LatLng(37.3339136,-121.8819874));
         skiPath2=skiPath2.add(new LatLng(37.3349136,-121.8829874));
         skiPath2=skiPath2.add(new LatLng(37.3359136,-121.8839874));*/
